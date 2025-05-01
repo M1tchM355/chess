@@ -8,15 +8,37 @@ public class BishopMovesCalculator extends PieceMovesCalculator{
         ArrayList<ChessMove> moves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        for(int i = row - 1;i <= row + 1;i++){
-            for(int j = col - 1;j <= col + 1;j++) {
-                if (i>0 && i<9 && j>0 && j<9){
-                    ChessPiece piece = board.getPiece(new ChessPosition(i,j));
-                    if(piece==null || piece.getTeamColor()!=pieceColor) {
-                        moves.add(new ChessMove(myPosition, new ChessPosition(i, j), null));
-                    }
-                }
-            }
+        //Diagonally up left
+        int newRow = row+1;
+        int newCol = col-1;
+        while(newRow>0 && newRow<9 && newCol>0 && newCol<9 && board.getPiece(new ChessPosition(newRow,newCol))==null){
+            moves.add(new ChessMove(myPosition, new ChessPosition(newRow, newCol), null));
+            newRow++;
+            newCol--;
+        }
+        //Diagonally up right
+        newRow = row+1;
+        newCol = col+1;
+        while(newRow>0 && newRow<9 && newCol>0 && newCol<9 && board.getPiece(new ChessPosition(newRow,newCol))==null){
+            moves.add(new ChessMove(myPosition, new ChessPosition(newRow, newCol), null));
+            newRow++;
+            newCol++;
+        }
+        //Diagonally down left
+        newRow = row-1;
+        newCol = col-1;
+        while(newRow>0 && newRow<9 && newCol>0 && newCol<9 && board.getPiece(new ChessPosition(newRow,newCol))==null){
+            moves.add(new ChessMove(myPosition, new ChessPosition(newRow, newCol), null));
+            newRow--;
+            newCol--;
+        }
+        //Diagonally down right
+        newRow = row-1;
+        newCol = col+1;
+        while(newRow>0 && newRow<9 && newCol>0 && newCol<9 && board.getPiece(new ChessPosition(newRow,newCol))==null){
+            moves.add(new ChessMove(myPosition, new ChessPosition(newRow, newCol), null));
+            newRow--;
+            newCol++;
         }
         return moves;
     }
