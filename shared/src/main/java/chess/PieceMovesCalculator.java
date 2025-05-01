@@ -7,7 +7,19 @@ public class PieceMovesCalculator {
 
     public PieceMovesCalculator(){}
 
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return new ArrayList<>();
+    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessPiece.PieceType type) {
+        if (type.equals(ChessPiece.PieceType.KING)) {
+            return KingMovesCalculator.pieceMoves(board, myPosition);
+        } else if (type.equals(ChessPiece.PieceType.QUEEN)) {
+            return QueenMovesCalculator.pieceMoves(board, myPosition);
+        } else if (type.equals(ChessPiece.PieceType.BISHOP)) {
+            return BishopMovesCalculator.pieceMoves(board, myPosition);
+        } else if (type.equals(ChessPiece.PieceType.KNIGHT)) {
+            return KnightMovesCalculator.pieceMoves(board, myPosition);
+        } else if (type.equals(ChessPiece.PieceType.ROOK)) {
+            return RookMovesCalculator.pieceMoves(board, myPosition);
+        } else {
+            return PawnMovesCalculator.pieceMoves(board, myPosition);
+        }
     }
 }
