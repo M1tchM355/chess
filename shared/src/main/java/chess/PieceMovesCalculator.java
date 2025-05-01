@@ -10,15 +10,15 @@ public class PieceMovesCalculator {
         if (type.equals(ChessPiece.PieceType.KING)) {
             return KingMovesCalculator.pieceMoves(board, myPosition, pieceColor);
         } else if (type.equals(ChessPiece.PieceType.QUEEN)) {
-            return QueenMovesCalculator.pieceMoves(board, myPosition);
+            return QueenMovesCalculator.pieceMoves(board, myPosition, pieceColor);
         } else if (type.equals(ChessPiece.PieceType.BISHOP)) {
-            return BishopMovesCalculator.pieceMoves(board, myPosition);
+            return BishopMovesCalculator.pieceMoves(board, myPosition, pieceColor);
         } else if (type.equals(ChessPiece.PieceType.KNIGHT)) {
-            return KnightMovesCalculator.pieceMoves(board, myPosition);
+            return KnightMovesCalculator.pieceMoves(board, myPosition, pieceColor);
         } else if (type.equals(ChessPiece.PieceType.ROOK)) {
-            return RookMovesCalculator.pieceMoves(board, myPosition);
+            return RookMovesCalculator.pieceMoves(board, myPosition, pieceColor);
         } else {
-            return PawnMovesCalculator.pieceMoves(board, myPosition);
+            return PawnMovesCalculator.pieceMoves(board, myPosition, pieceColor);
         }
     }
 }
