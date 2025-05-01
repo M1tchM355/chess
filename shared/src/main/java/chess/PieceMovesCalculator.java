@@ -6,9 +6,9 @@ public class PieceMovesCalculator {
 
     public PieceMovesCalculator(){}
 
-    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessPiece.PieceType type) {
+    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessPiece.PieceType type, ChessGame.TeamColor pieceColor) {
         if (type.equals(ChessPiece.PieceType.KING)) {
-            return KingMovesCalculator.pieceMoves(board, myPosition);
+            return KingMovesCalculator.pieceMoves(board, myPosition, pieceColor);
         } else if (type.equals(ChessPiece.PieceType.QUEEN)) {
             return QueenMovesCalculator.pieceMoves(board, myPosition);
         } else if (type.equals(ChessPiece.PieceType.BISHOP)) {
