@@ -8,16 +8,24 @@ public class KnightMovesCalculator extends PieceMovesCalculator{
         ArrayList<ChessMove> moves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        for(int i = row - 1;i <= row + 1;i++){
-            for(int j = col - 1;j <= col + 1;j++) {
-                if (i>0 && i<9 && j>0 && j<9){
-                    ChessPiece piece = board.getPiece(new ChessPosition(i,j));
-                    if(piece==null || piece.getTeamColor()!=pieceColor) {
-                        moves.add(new ChessMove(myPosition, new ChessPosition(i, j), null));
-                    }
-                }
+
+        ChessPosition[] possibilities ={new ChessPosition(row+1,col-2),
+                                        new ChessPosition(row+2,col-1),
+                                        new ChessPosition(row+2,col+1),
+                                        new ChessPosition(row+1,col+2),
+                                        new ChessPosition(row-2,col-1),
+                                        new ChessPosition(row-1,col-2),
+                                        new ChessPosition(row-2,col+1),
+                                        new ChessPosition(row-1,col+2)};
+
+        for(ChessPosition pos : possibilities){
+            int newRow = pos.getRow();
+            int newCol = pos.getColumn();
+            if(newRow>0 && newRow<9 && newCol>0 && newCol<9 && (board.getPiece(pos)==null || board.getPiece(pos).getTeamColor()!=pieceColor)){
+                moves.add(new ChessMove(myPosition,pos,null));
             }
         }
+
         return moves;
     }
 }
