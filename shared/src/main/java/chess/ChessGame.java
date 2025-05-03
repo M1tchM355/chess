@@ -58,7 +58,12 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        ChessPosition start = move.getStartPosition();
+        ChessPosition end = move.getEndPosition();
+        ChessPiece.PieceType promote = move.getPromotionPiece();
+        if (start.getRow()<1 || start.getRow()>8 || start.getColumn()<1 || start.getColumn()>8 || end.getRow()<1 || end.getRow()>8 || end.getColumn()<1 || end.getColumn()>8){
+            throw new InvalidMoveException("Invalid starting or ending position.");
+        }
     }
 
     /**
