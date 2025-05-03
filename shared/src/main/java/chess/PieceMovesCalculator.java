@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class PieceMovesCalculator {
@@ -18,5 +19,19 @@ public class PieceMovesCalculator {
         } else {
             return PawnMovesCalculator.pieceMoves(board, myPosition, pieceColor);
         }
+    }
+
+    public static ArrayList<ChessMove> iterate(ArrayList<ChessMove> moves, int rowChange, int colChange, ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor pieceColor){
+        int newRow = myPosition.getRow()+rowChange;
+        int newCol = myPosition.getColumn()+colChange;
+        while(newRow>0 && newRow<9 && newCol>0 && newCol<9 && board.getPiece(new ChessPosition(newRow,newCol))==null){
+            moves.add(new ChessMove(myPosition, new ChessPosition(newRow, newCol), null));
+            newRow+=rowChange;
+            newCol+=colChange;
+        }
+        if(newRow>0 && newRow<9 && newCol>0 && newCol<9 && board.getPiece(new ChessPosition(newRow,newCol)).getTeamColor()!=pieceColor){
+            moves.add(new ChessMove(myPosition, new ChessPosition(newRow, newCol), null));
+        }
+        return moves;
     }
 }
