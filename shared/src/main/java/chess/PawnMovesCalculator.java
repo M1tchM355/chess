@@ -14,7 +14,16 @@ public class PawnMovesCalculator extends PieceMovesCalculator{
             ChessPiece piece1 = board.getPiece(new ChessPosition(row + 1, col));
             //Move forward
             if (piece1 == null) {
-                moves.add(new ChessMove(myPosition, new ChessPosition(row + 1, col), null));
+                //Promote
+                if(row==7){
+                    for(ChessPiece.PieceType type : ChessPiece.PieceType.values()){
+                        if(type!= ChessPiece.PieceType.PAWN && type!= ChessPiece.PieceType.KING){
+                            moves.add(new ChessMove(myPosition, new ChessPosition(row + 1, col), type));
+                        }
+                    }
+                } else {
+                    moves.add(new ChessMove(myPosition, new ChessPosition(row + 1, col), null));
+                }
                 //Move forward 2 if it hasn't moved
                 if (!hasMoved && board.getPiece(new ChessPosition(row + 2, col)) == null) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(row + 2, col), null));
@@ -32,7 +41,16 @@ public class PawnMovesCalculator extends PieceMovesCalculator{
             ChessPiece piece1 = board.getPiece(new ChessPosition(row - 1, col));
             //Move forward
             if (piece1 == null) {
-                moves.add(new ChessMove(myPosition, new ChessPosition(row - 1, col), null));
+                //Promote
+                if(row==2){
+                    for(ChessPiece.PieceType type : ChessPiece.PieceType.values()){
+                        if(type!= ChessPiece.PieceType.PAWN && type!= ChessPiece.PieceType.KING){
+                            moves.add(new ChessMove(myPosition, new ChessPosition(row - 1, col), type));
+                        }
+                    }
+                } else {
+                    moves.add(new ChessMove(myPosition, new ChessPosition(row - 1, col), null));
+                }
                 //Move forward 2 if it hasn't moved
                 if (!hasMoved && board.getPiece(new ChessPosition(row - 2, col)) == null) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(row - 2, col), null));
