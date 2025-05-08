@@ -30,7 +30,7 @@ public class PawnMovesCalculator extends PieceMovesCalculator{
             }
         }
         //Take diagonally
-        if(col-1>0 && row+direction<9 && board.getPiece(new ChessPosition(row+direction,col-1))!=null &&
+        if(isInBounds(row+direction,col-1) && board.getPiece(new ChessPosition(row+direction,col-1))!=null &&
                 board.getPiece(new ChessPosition(row+direction,col-1)).getTeamColor()!=pieceColor){
             //Promote
             if(row+direction==1 || row+direction==8){
@@ -39,7 +39,7 @@ public class PawnMovesCalculator extends PieceMovesCalculator{
                 moves.add(new ChessMove(myPosition, new ChessPosition(row + direction, col - 1), null));
             }
         }
-        if(col+1<9 && row+direction<9 && board.getPiece(new ChessPosition(row+direction,col+1))!=null &&
+        if(isInBounds(row+direction,col+1) && board.getPiece(new ChessPosition(row+direction,col+1))!=null &&
                 board.getPiece(new ChessPosition(row+direction,col+1)).getTeamColor()!=pieceColor){
             //Promote
             if(row+direction==1 || row+direction==8){

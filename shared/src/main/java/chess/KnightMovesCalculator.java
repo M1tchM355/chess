@@ -19,9 +19,10 @@ public class KnightMovesCalculator extends PieceMovesCalculator{
                                         new ChessPosition(row-1,col+2)};
 
         for(ChessPosition pos : possibilities){
-            int newRow = pos.getRow();
-            int newCol = pos.getColumn();
-            if(newRow>0 && newRow<9 && newCol>0 && newCol<9 && (board.getPiece(pos)==null || board.getPiece(pos).getTeamColor()!=pieceColor)){
+            row = pos.getRow();
+            col = pos.getColumn();
+            if(isInBounds(row,col) && (board.getPiece(pos)==null
+                    || board.getPiece(pos).getTeamColor()!=pieceColor)){
                 moves.add(new ChessMove(myPosition,pos,null));
             }
         }

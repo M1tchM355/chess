@@ -7,13 +7,13 @@ public class BishopMovesCalculator extends PieceMovesCalculator{
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor pieceColor) {
         ArrayList<ChessMove> moves = new ArrayList<>();
         //Diagonally up left
-        moves = iterate(moves,1,-1,board,myPosition,pieceColor);
+        iterate(moves,1,-1,board,myPosition,pieceColor);
         //Diagonally up right
-        moves = iterate(moves,1,1,board,myPosition,pieceColor);
+        iterate(moves,1,1,board,myPosition,pieceColor);
         //Diagonally down left
-        moves = iterate(moves,-1,-1,board,myPosition,pieceColor);
+        iterate(moves,-1,-1,board,myPosition,pieceColor);
         //Diagonally down right
-        moves = iterate(moves,-1,1,board,myPosition,pieceColor);
+        iterate(moves,-1,1,board,myPosition,pieceColor);
         return moves;
     }
 }
