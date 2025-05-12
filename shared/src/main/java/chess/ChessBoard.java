@@ -9,8 +9,8 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
-    private final ChessPiece[][] squares = new ChessPiece[8][8];
+public class ChessBoard implements Cloneable {
+    private ChessPiece[][] squares = new ChessPiece[8][8];
 
     public ChessBoard() {
     }
@@ -68,6 +68,27 @@ public class ChessBoard {
         squares[7][7] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
         for (int i = 0; i < 8; i++){
             squares[6][i] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+        }
+    }
+
+    @Override
+    public ChessBoard clone(){
+        try {
+            ChessBoard clone = (ChessBoard) super.clone();
+
+            ChessPiece[][] newSquares = new ChessPiece[8][8];
+            for(int i=0;i<8;i++){
+                for(int j=0;j<8;j++){
+                    if(newSquares[i][j]==null){
+                        continue;
+                    }
+                    newSquares[i][j] = squares[i][j].clone();
+                }
+            }
+            clone.squares = newSquares;
+            return clone;
+        } catch (CloneNotSupportedException e){
+            throw new RuntimeException();
         }
     }
 
