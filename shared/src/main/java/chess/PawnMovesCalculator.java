@@ -43,7 +43,7 @@ public class PawnMovesCalculator extends PieceMovesCalculator{
                 board.getPiece(new ChessPosition(row+direction,col+1)).getTeamColor()!=pieceColor){
             //Promote
             if(row+direction==1 || row+direction==8){
-                promote(myPosition,row,col,direction,moves);
+                promote(myPosition,row,col+1,direction,moves);
             } else {
                 moves.add(new ChessMove(myPosition, new ChessPosition(row + direction, col + 1), null));
             }
