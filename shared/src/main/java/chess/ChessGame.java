@@ -183,7 +183,21 @@ public class ChessGame {
             return false;
         }
 
-        return false;
+        for(int i=1;i<9;i++){
+            for(int j=1;j<9;j++){
+                ChessPosition pos = new ChessPosition(i,j);
+                ChessPiece piece = board.getPiece(pos);
+                if(piece==null || piece.getTeamColor()!=teamColor){
+                    continue;
+                }
+                Collection<ChessMove> moves = validMoves(pos);
+                if(!moves.isEmpty()){
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
