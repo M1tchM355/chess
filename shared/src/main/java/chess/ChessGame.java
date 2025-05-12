@@ -73,6 +73,20 @@ public class ChessGame {
             return null;
         }
         Collection<ChessMove> moves = piece.pieceMoves(board, startPosition);
+        Collection<ChessMove> invalidMoves = new ArrayList<>();
+        for(ChessMove move : moves){
+            ChessBoard newBoard = board.clone();
+            if(move.getPromotionPiece()==null){
+                newBoard.addPiece(move.getEndPosition(),piece);
+            } else {
+                newBoard.addPiece(move.getEndPosition(),new ChessPiece(piece.getTeamColor(),move.getPromotionPiece()));
+            }
+            newBoard.addPiece(move.getStartPosition(),null);
+            if(isInCheck(piece.getTeamColor())){
+                invalidMoves.add(move);
+            }
+        }
+        moves.removeAll(invalidMoves);
         return moves;
     }
 
@@ -123,6 +137,7 @@ public class ChessGame {
                 }
             }
         }
+        //Shouldn't ever return null
         return null;
     }
 
@@ -151,6 +166,7 @@ public class ChessGame {
         return false;
     }
 
+
     /**
      * Determines if the given team is in checkmate
      *
@@ -158,7 +174,11 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if(!isInCheck(teamColor)){
+            return false;
+        }
+
+        return false;
     }
 
     /**
@@ -169,7 +189,11 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if(isInCheck(teamColor)){
+            return false;
+        }
+
+        return false;
     }
 
     /**
