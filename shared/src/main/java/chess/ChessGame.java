@@ -87,15 +87,27 @@ public class ChessGame {
         ChessPiece.PieceType promote = move.getPromotionPiece();
         Collection<ChessMove> validMoves = validMoves(start);
         ChessPiece piece = board.getPiece(start);
-        if(validMoves.contains(move)) {
-            if(promote==null){
-                board.addPiece(end,piece);
-            } else {
-                board.addPiece(end,new ChessPiece(piece.getTeamColor(),promote));
-            }
-            board.addPiece(start,null);
-        } else {
+        if(validMoves==null){
+            throw new InvalidMoveException("No piece selected");
+        }
+        if(turn!=piece.getTeamColor()){
+            throw new InvalidMoveException("Not your turn");
+        }
+        if(!validMoves.contains(move)){
+            System.out.println(move);
+            System.out.println(validMoves);
             throw new InvalidMoveException("Invalid Move");
+        }
+        if(promote==null){
+            board.addPiece(end,piece);
+        } else {
+            board.addPiece(end,new ChessPiece(piece.getTeamColor(),promote));
+        }
+        board.addPiece(start,null);
+        if(turn==TeamColor.WHITE){
+            turn = TeamColor.BLACK;
+        } else {
+            turn = TeamColor.WHITE;
         }
     }
 
