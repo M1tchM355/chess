@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -94,8 +95,6 @@ public class ChessGame {
             throw new InvalidMoveException("Not your turn");
         }
         if(!validMoves.contains(move)){
-            System.out.println(move);
-            System.out.println(validMoves);
             throw new InvalidMoveException("Invalid Move");
         }
         if(promote==null){
@@ -111,6 +110,22 @@ public class ChessGame {
         }
     }
 
+    private ChessPosition findKing(TeamColor color){
+        for(int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
+                ChessPosition pos = new ChessPosition(i, j);
+                ChessPiece piece = board.getPiece(pos);
+                if(piece==null){
+                    continue;
+                }
+                if(piece.getPieceType() == ChessPiece.PieceType.KING && piece.getTeamColor()==color){
+                    return pos;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Determines if the given team is in check
      *
@@ -118,7 +133,22 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition kingPos = findKing(teamColor);
+        for(int i=1;i<9;i++){
+            for(int j=1;j<9;j++){
+                ChessPosition pos = new ChessPosition(i,j);
+                ChessPiece piece = board.getPiece(pos);
+                if(piece==null){
+                    continue;
+                }
+                Collection<ChessMove> moves = piece.pieceMoves(board, pos);
+                if(moves.contains(new ChessMove(pos,kingPos,null)) ||
+                        moves.contains(new ChessMove(pos,kingPos, ChessPiece.PieceType.QUEEN))){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
