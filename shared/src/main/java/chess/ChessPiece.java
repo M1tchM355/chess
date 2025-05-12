@@ -50,7 +50,7 @@ public class ChessPiece implements Cloneable{
 
     @Override
     public String toString() {
-        return "ChessPiece{" + pieceColor +
+        return "{" + pieceColor +
                 ", " + type +
                 '}';
     }
