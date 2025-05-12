@@ -79,7 +79,7 @@ public class ChessBoard implements Cloneable {
             ChessPiece[][] newSquares = new ChessPiece[8][8];
             for(int i=0;i<8;i++){
                 for(int j=0;j<8;j++){
-                    if(newSquares[i][j]==null){
+                    if(squares[i][j]==null){
                         continue;
                     }
                     newSquares[i][j] = squares[i][j].clone();

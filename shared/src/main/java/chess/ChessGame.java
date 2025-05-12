@@ -83,6 +83,7 @@ public class ChessGame {
             }
             newBoard.addPiece(move.getStartPosition(),null);
             if(isInCheckHelper(piece.getTeamColor(), newBoard)){
+                System.out.println(move);
                 invalidMoves.add(move);
             }
         }
