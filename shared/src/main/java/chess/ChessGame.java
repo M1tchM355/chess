@@ -82,7 +82,7 @@ public class ChessGame {
                 newBoard.addPiece(move.getEndPosition(),new ChessPiece(piece.getTeamColor(),move.getPromotionPiece()));
             }
             newBoard.addPiece(move.getStartPosition(),null);
-            if(isInCheck(piece.getTeamColor())){
+            if(isInCheckHelper(piece.getTeamColor(), newBoard)){
                 invalidMoves.add(move);
             }
         }
@@ -103,7 +103,7 @@ public class ChessGame {
         Collection<ChessMove> validMoves = validMoves(start);
         ChessPiece piece = board.getPiece(start);
         if(validMoves==null){
-            throw new InvalidMoveException("No piece selected");
+            throw new InvalidMoveException("No valid moves");
         }
         if(turn!=piece.getTeamColor()){
             throw new InvalidMoveException("Not your turn");
@@ -124,7 +124,7 @@ public class ChessGame {
         }
     }
 
-    private ChessPosition findKing(TeamColor color){
+    private ChessPosition findKing(TeamColor color, ChessBoard board){
         for(int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
                 ChessPosition pos = new ChessPosition(i, j);
@@ -148,15 +148,19 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        ChessPosition kingPos = findKing(teamColor);
+        return isInCheckHelper(teamColor, board);
+    }
+
+    private boolean isInCheckHelper(TeamColor teamColor, ChessBoard newBoard) {
+        ChessPosition kingPos = findKing(teamColor, newBoard);
         for(int i=1;i<9;i++){
             for(int j=1;j<9;j++){
                 ChessPosition pos = new ChessPosition(i,j);
-                ChessPiece piece = board.getPiece(pos);
+                ChessPiece piece = newBoard.getPiece(pos);
                 if(piece==null){
                     continue;
                 }
-                Collection<ChessMove> moves = piece.pieceMoves(board, pos);
+                Collection<ChessMove> moves = piece.pieceMoves(newBoard, pos);
                 if(moves.contains(new ChessMove(pos,kingPos,null)) ||
                         moves.contains(new ChessMove(pos,kingPos, ChessPiece.PieceType.QUEEN))){
                     return true;
