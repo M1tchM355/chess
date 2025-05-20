@@ -18,6 +18,12 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
         Spark.post("/user",this::register);
+        Spark.post("/session",this::login);
+        Spark.delete("/db",this::clear);
+        Spark.delete("/session",this::logout);
+        Spark.get("/game",this::listGames);
+        Spark.post("/game",this::createGame);
+        Spark.put("/game",this::joinGame);
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -29,6 +35,30 @@ public class Server {
     }
 
     private Object register(Request req, Response res){
+        return new RegisterHandler().register(req, res, daoRecord);
+    }
+
+    private Object login(Request req, Response res){
+        return new RegisterHandler().register(req, res, daoRecord);
+    }
+
+    private Object clear(Request req, Response res){
+        return new RegisterHandler().register(req, res, daoRecord);
+    }
+
+    private Object logout(Request req, Response res){
+        return new RegisterHandler().register(req, res, daoRecord);
+    }
+
+    private Object listGames(Request req, Response res){
+        return new RegisterHandler().register(req, res, daoRecord);
+    }
+
+    private Object createGame(Request req, Response res){
+        return new RegisterHandler().register(req, res, daoRecord);
+    }
+
+    private Object joinGame(Request req, Response res){
         return new RegisterHandler().register(req, res, daoRecord);
     }
 }
