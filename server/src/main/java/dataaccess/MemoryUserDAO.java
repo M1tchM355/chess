@@ -1,15 +1,14 @@
 package dataaccess;
 
-import model.AuthData;
 import model.UserData;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 public class MemoryUserDAO implements UserDAO{
-    final static private HashMap<String, UserData> users = new HashMap<>();
+    final private HashMap<String, UserData> users = new HashMap<>();
 
-    public static UserData getUser(String username) throws DataAccessException{
+    @Override
+    public UserData getUser(String username) throws DataAccessException {
         UserData user = users.get(username);
         if(user == null){
             throw new DataAccessException("User does not exist");
@@ -17,11 +16,8 @@ public class MemoryUserDAO implements UserDAO{
         return user;
     }
 
-    public static void createUser(UserData user){
+    @Override
+    public void createUser(UserData user){
         users.put(user.username(),user);
-    }
-
-    public static AuthData createAuth(UserData user){
-        return new AuthData(UUID.randomUUID().toString(),user.username());
     }
 }
