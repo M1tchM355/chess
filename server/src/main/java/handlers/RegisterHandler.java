@@ -16,7 +16,6 @@ public class RegisterHandler extends ChessHandler{
         RegisterService registerService = new RegisterService(daoRecord.userDAO(),daoRecord.authDAO());
         try {
             RegisterResult result = registerService.register(request);
-            res.header("Code",200);
             return gson.toJson(result);
         } catch (AlreadyTakenException e) {
             res.header("Code",403);
