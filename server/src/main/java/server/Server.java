@@ -8,10 +8,7 @@ public class Server {
     private final DAORecord daoRecord;
 
     public Server(){
-        UserDAO userDAO = new MemoryUserDAO();
-        AuthDAO authDAO = new MemoryAuthDAO();
-        GameDAO gameDAO = new MemoryGameDAO();
-        this.daoRecord = new DAORecord(userDAO,authDAO,gameDAO);
+        this.daoRecord = new DAORecord(new MemoryUserDAO(),new MemoryAuthDAO(),new MemoryGameDAO());
     }
 
     public int run(int desiredPort) {
