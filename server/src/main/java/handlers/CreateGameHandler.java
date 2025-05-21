@@ -23,6 +23,9 @@ public class CreateGameHandler extends ChessHandler{
         } catch (DataAccessException e){
             res.status(400);
             return new Gson().toJson("Error: bad request");
+        } catch (Exception e) {
+            res.status(500);
+            return new Gson().toJson("Error: "+e.toString());
         }
     }
 }
