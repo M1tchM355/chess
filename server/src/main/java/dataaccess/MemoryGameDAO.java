@@ -46,4 +46,9 @@ public class MemoryGameDAO implements GameDAO{
         games.replace(gameID,newGame);
         return newGame;
     }
+
+    @Override
+    public void clearGames() {
+        games.clear();
+    }
 }
