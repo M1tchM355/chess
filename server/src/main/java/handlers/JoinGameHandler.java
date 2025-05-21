@@ -5,6 +5,7 @@ import dataaccess.DAORecord;
 import dataaccess.DataAccessException;
 import request.JoinGameRequest;
 import result.JoinGameResult;
+import service.BadRequestException;
 import service.JoinGameService;
 import service.UnauthorizedException;
 import spark.Request;
@@ -15,14 +16,15 @@ public class JoinGameHandler extends ChessHandler{
         try{
             String authToken = req.headers("Authorization");
             checkAuth(authToken, daoRecord.authDAO());
-            JoinGameRequest request = new Gson().fromJson(req.body(), JoinGameRequest.class);
+            JoinGameRequest partialRequest = new Gson().fromJson(req.body(), JoinGameRequest.class);
+            JoinGameRequest request = new JoinGameRequest(partialRequest.playerColor(),partialRequest.gameID(),authToken);
             JoinGameService joinGameService = new JoinGameService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO());
             JoinGameResult result = joinGameService.joinGame(request);
             return new Gson().toJson(result);
         } catch (UnauthorizedException e) {
             res.status(401);
             return new Gson().toJson(new ErrorResponse("Error: unauthorized"));
-        } catch (DataAccessException e){
+        } catch (BadRequestException e){
             res.status(400);
             return new Gson().toJson(new ErrorResponse("Error: bad request"));
         } catch (Exception e) {

@@ -5,6 +5,7 @@ import dataaccess.DAORecord;
 import dataaccess.DataAccessException;
 import request.LoginRequest;
 import result.LoginResult;
+import service.BadRequestException;
 import service.LoginService;
 import service.UnauthorizedException;
 import spark.Request;
@@ -16,15 +17,15 @@ public class LoginHandler extends ChessHandler{
             LoginRequest request = new Gson().fromJson(req.body(), LoginRequest.class);
             LoginResult result = new LoginService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO()).login(request);
             return new Gson().toJson(result);
-        } catch (UnauthorizedException e) {
+        } catch (UnauthorizedException | DataAccessException e) {
             res.status(401);
             return new Gson().toJson(new ErrorResponse("Error: unauthorized"));
-        } catch (DataAccessException e) {
+        } catch (BadRequestException e) {
             res.status(400);
             return new Gson().toJson(new ErrorResponse("Error: bad request"));
         } catch (Exception e){
             res.status(500);
-            return new Gson().toJson(new ErrorResponse("Error: "+e.toString()));
+            return new Gson().toJson(new ErrorResponse("Error: " + e.toString()));
         }
     }
 }

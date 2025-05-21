@@ -5,6 +5,7 @@ import dataaccess.DAORecord;
 import dataaccess.DataAccessException;
 import request.CreateGameRequest;
 import result.CreateGameResult;
+import service.BadRequestException;
 import service.CreateGameService;
 import service.UnauthorizedException;
 import spark.Request;
@@ -22,7 +23,7 @@ public class CreateGameHandler extends ChessHandler{
         } catch (UnauthorizedException e) {
             res.status(401);
             return new Gson().toJson(new ErrorResponse("Error: unauthorized"));
-        } catch (DataAccessException e){
+        } catch (BadRequestException e){
             res.status(400);
             return new Gson().toJson(new ErrorResponse("Error: bad request"));
         } catch (Exception e) {

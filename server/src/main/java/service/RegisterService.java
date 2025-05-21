@@ -14,7 +14,10 @@ public class RegisterService extends ChessService{
         super(gameDAO,authDAO,userDAO);
     }
 
-    public RegisterResult register(RegisterRequest req) throws AlreadyTakenException{
+    public RegisterResult register(RegisterRequest req) throws AlreadyTakenException, BadRequestException{
+        if(req.username() == null || req.password() == null || req.email() == null){
+            throw new BadRequestException("Missing parameter");
+        }
         try{
             UserData userCheck = userDAO.getUser(req.username());
             throw new AlreadyTakenException("Username is already taken");

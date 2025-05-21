@@ -6,6 +6,7 @@ import dataaccess.DataAccessException;
 import request.RegisterRequest;
 import result.RegisterResult;
 import service.AlreadyTakenException;
+import service.BadRequestException;
 import service.RegisterService;
 import spark.Request;
 import spark.Response;
@@ -21,9 +22,12 @@ public class RegisterHandler extends ChessHandler{
         } catch (AlreadyTakenException e) {
             res.status(403);
             return gson.toJson(new ErrorResponse("Error: already taken"));
-        } catch (Exception e) {
+        } catch (BadRequestException e) {
             res.status(400);
             return gson.toJson(new ErrorResponse("Error: bad request"));
+        } catch (Exception e){
+            res.status(500);
+            return new Gson().toJson(new ErrorResponse("Error: " + e.toString()));
         }
     }
 }

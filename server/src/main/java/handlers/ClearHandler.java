@@ -12,6 +12,7 @@ public class ClearHandler extends ChessHandler {
         try {
             ClearRequest request = new Gson().fromJson(req.body(), ClearRequest.class);
             ClearService clearService = new ClearService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO());
+            clearService.clear(request);
             return new Gson().toJson(null);
         } catch (Exception e) {
             res.status(500);
