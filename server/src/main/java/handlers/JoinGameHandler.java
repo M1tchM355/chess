@@ -5,6 +5,7 @@ import dataaccess.DAORecord;
 import dataaccess.DataAccessException;
 import request.JoinGameRequest;
 import result.JoinGameResult;
+import service.AlreadyTakenException;
 import service.BadRequestException;
 import service.JoinGameService;
 import service.UnauthorizedException;
@@ -27,6 +28,9 @@ public class JoinGameHandler extends ChessHandler{
         } catch (BadRequestException e){
             res.status(400);
             return new Gson().toJson(new ErrorResponse("Error: bad request"));
+        } catch (AlreadyTakenException e) {
+            res.status(403);
+            return new Gson().toJson(new ErrorResponse("Error: already taken"));
         } catch (Exception e) {
             res.status(500);
             return new Gson().toJson(new ErrorResponse("Error: "+e.toString()));

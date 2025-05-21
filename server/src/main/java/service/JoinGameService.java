@@ -13,7 +13,8 @@ public class JoinGameService extends ChessService{
         super(gameDAO,authDAO,userDAO);
     }
 
-    public JoinGameResult joinGame(JoinGameRequest req) throws UnauthorizedException, DataAccessException, BadRequestException {
+    public JoinGameResult joinGame(JoinGameRequest req) throws UnauthorizedException, DataAccessException,
+                                                               BadRequestException, AlreadyTakenException {
         if(req.gameID() == 0 || req.playerColor() == null){
             throw new BadRequestException("Missing parameter");
         }

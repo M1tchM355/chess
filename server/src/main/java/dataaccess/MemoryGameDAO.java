@@ -2,6 +2,7 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.GameData;
+import service.AlreadyTakenException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,15 +33,21 @@ public class MemoryGameDAO implements GameDAO{
     }
 
     @Override
-    public void updateGame(int gameID, String playerColor, String username) throws DataAccessException {
+    public void updateGame(int gameID, String playerColor, String username) throws DataAccessException, AlreadyTakenException {
         GameData oldGame = games.get(gameID);
         if(oldGame==null){
             throw new DataAccessException("Invalid gameID");
         }
         GameData newGame;
         if(playerColor.equals("WHITE")){
+            if(oldGame.whiteUsername() != null){
+                throw new AlreadyTakenException("Color already taken");
+            }
             newGame = new GameData(gameID, username, oldGame.blackUsername(), oldGame.gameName(), oldGame.game());
         } else if(playerColor.equals("BLACK")){
+            if(oldGame.blackUsername() != null){
+                throw new AlreadyTakenException("Color already taken");
+            }
             newGame = new GameData(gameID, oldGame.whiteUsername(), username, oldGame.gameName(), oldGame.game());
         } else {
             throw new DataAccessException("Invalid player color");
