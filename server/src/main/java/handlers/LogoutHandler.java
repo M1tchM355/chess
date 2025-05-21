@@ -21,10 +21,10 @@ public class LogoutHandler extends ChessHandler{
            return new Gson().toJson(result);
        } catch (UnauthorizedException e){
            res.status(401);
-           return new Gson().toJson("Error: unauthorized");
+           return new Gson().toJson(new ErrorResponse("Error: unauthorized"));
        } catch (Exception e) {
            res.status(500);
-           return new Gson().toJson("Error: "+e.toString());
+           return new Gson().toJson(new ErrorResponse("Error: "+e.toString()));
        }
     }
 }

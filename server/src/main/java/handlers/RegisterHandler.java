@@ -20,10 +20,10 @@ public class RegisterHandler extends ChessHandler{
             return gson.toJson(result);
         } catch (AlreadyTakenException e) {
             res.status(403);
-            return gson.toJson("Error: already taken");
+            return gson.toJson(new ErrorResponse("Error: already taken"));
         } catch (Exception e) {
             res.status(400);
-            return gson.toJson("Error: bad request");
+            return gson.toJson(new ErrorResponse("Error: bad request"));
         }
     }
 }
