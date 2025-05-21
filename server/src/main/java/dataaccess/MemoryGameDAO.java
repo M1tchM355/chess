@@ -3,6 +3,7 @@ package dataaccess;
 import chess.ChessGame;
 import model.GameData;
 import service.AlreadyTakenException;
+import service.BadRequestException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class MemoryGameDAO implements GameDAO{
             }
             newGame = new GameData(gameID, oldGame.whiteUsername(), username, oldGame.gameName(), oldGame.game());
         } else {
-            throw new DataAccessException("Invalid player color");
+            throw new BadRequestException("Invalid player color");
         }
         games.replace(gameID,newGame);
     }
