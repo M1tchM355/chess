@@ -2,6 +2,7 @@ package dataaccess;
 
 import model.AuthData;
 import model.UserData;
+import service.UnauthorizedException;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -17,8 +18,11 @@ public class MemoryAuthDAO implements AuthDAO{
     }
 
     @Override
-    public AuthData getAuth(String authToken){
+    public AuthData getAuth(String authToken) throws UnauthorizedException{
         AuthData auth = auths.get(authToken);
+        if(auth==null){
+            throw new UnauthorizedException("Invalid authToken");
+        }
         return auth;
     }
 
