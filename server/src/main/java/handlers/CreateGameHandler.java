@@ -14,7 +14,7 @@ public class CreateGameHandler extends ChessHandler{
     public String createGame(Request req, Response res, DAORecord daoRecord){
         try{
             CreateGameRequest request = new Gson().fromJson(req.body(), CreateGameRequest.class);
-            CreateGameService createGameService = new CreateGameService(daoRecord.gameDAO(), daoRecord.authDAO());
+            CreateGameService createGameService = new CreateGameService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO());
             CreateGameResult result = createGameService.createGame(request);
             return new Gson().toJson(result);
         } catch (UnauthorizedException e) {

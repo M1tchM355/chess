@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
+import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
@@ -9,12 +10,8 @@ import request.RegisterRequest;
 import result.RegisterResult;
 
 public class RegisterService extends ChessService{
-    private final UserDAO userDAO;
-    private final AuthDAO authDAO;
-
-    public RegisterService(UserDAO userDAO, AuthDAO authDAO){
-        this.userDAO = userDAO;
-        this.authDAO = authDAO;
+    public RegisterService(GameDAO gameDAO, AuthDAO authDAO, UserDAO userDAO){
+        super(gameDAO,authDAO,userDAO);
     }
 
     public RegisterResult register(RegisterRequest req) throws AlreadyTakenException{

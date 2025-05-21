@@ -13,7 +13,7 @@ public class ListGamesHandler extends ChessHandler{
     public String listGames(Request req, Response res, DAORecord daoRecord){
         try{
             ListGamesRequest request = new Gson().fromJson(req.body(), ListGamesRequest.class);
-            ListGamesService listGamesService = new ListGamesService(daoRecord.gameDAO(), daoRecord.authDAO());
+            ListGamesService listGamesService = new ListGamesService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO());
             ListGamesResult result = listGamesService.listGames(request);
             return new Gson().toJson(result);
         } catch (UnauthorizedException e){

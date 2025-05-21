@@ -14,7 +14,7 @@ public class JoinGameHandler extends ChessHandler{
     public String joinGame(Request req, Response res, DAORecord daoRecord){
         try{
             JoinGameRequest request = new Gson().fromJson(req.body(), JoinGameRequest.class);
-            JoinGameService joinGameService = new JoinGameService(daoRecord.gameDAO(), daoRecord.authDAO());
+            JoinGameService joinGameService = new JoinGameService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO());
             JoinGameResult result = joinGameService.joinGame(request);
             return new Gson().toJson(result);
         } catch (UnauthorizedException e) {

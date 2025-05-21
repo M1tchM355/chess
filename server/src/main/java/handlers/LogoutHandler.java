@@ -14,7 +14,7 @@ public class LogoutHandler extends ChessHandler{
     public String logout(Request req, Response res, DAORecord daoRecord){
        try {
            LogoutRequest request = new Gson().fromJson(req.body(), LogoutRequest.class);
-           LogoutService logoutService = new LogoutService(daoRecord.authDAO());
+           LogoutService logoutService = new LogoutService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO());
            LogoutResult result = logoutService.logout(request);
            return new Gson().toJson(result);
        } catch (UnauthorizedException e){

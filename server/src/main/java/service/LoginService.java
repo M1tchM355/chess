@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
+import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
@@ -9,12 +10,8 @@ import request.LoginRequest;
 import result.LoginResult;
 
 public class LoginService extends ChessService{
-    private final UserDAO userDAO;
-    private final AuthDAO authDAO;
-
-    public LoginService(UserDAO userDAO, AuthDAO authDAO){
-        this.userDAO = userDAO;
-        this.authDAO = authDAO;
+    public LoginService(GameDAO gameDAO, AuthDAO authDAO, UserDAO userDAO){
+        super(gameDAO,authDAO,userDAO);
     }
 
     public LoginResult login(LoginRequest req) throws DataAccessException,UnauthorizedException{

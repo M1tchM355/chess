@@ -15,7 +15,8 @@ public class RegisterServiceTest {
     public void registerSuccess() {
         UserDAO userDAO = new MemoryUserDAO();
         AuthDAO authDAO = new MemoryAuthDAO();
-        RegisterService registerService = new RegisterService(userDAO, authDAO);
+        GameDAO gameDAO = new MemoryGameDAO();
+        RegisterService registerService = new RegisterService(gameDAO, authDAO, userDAO);
         String username = "username";
         String password = "pass123";
         String email = "myemail@gmail.com";
@@ -33,8 +34,8 @@ public class RegisterServiceTest {
     public void registerExistingUser() {
         UserDAO userDAO = new MemoryUserDAO();
         AuthDAO authDAO = new MemoryAuthDAO();
-        RegisterService registerService = new RegisterService(userDAO, authDAO);
-        String username = "username";
+        GameDAO gameDAO = new MemoryGameDAO();
+        RegisterService registerService = new RegisterService(gameDAO, authDAO, userDAO);        String username = "username";
         String password = "pass123";
         String email = "myemail@gmail.com";
         RegisterRequest req = new RegisterRequest(username,password,email);

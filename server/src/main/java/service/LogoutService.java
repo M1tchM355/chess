@@ -1,15 +1,15 @@
 package service;
 
 import dataaccess.AuthDAO;
+import dataaccess.GameDAO;
+import dataaccess.UserDAO;
 import model.AuthData;
 import request.LogoutRequest;
 import result.LogoutResult;
 
 public class LogoutService extends ChessService{
-    private final AuthDAO authDAO;
-
-    public LogoutService(AuthDAO authDAO){
-        this.authDAO = authDAO;
+    public LogoutService(GameDAO gameDAO, AuthDAO authDAO, UserDAO userDAO){
+        super(gameDAO,authDAO,userDAO);
     }
 
     public LogoutResult logout(LogoutRequest req) throws UnauthorizedException{

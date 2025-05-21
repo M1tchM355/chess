@@ -13,7 +13,7 @@ public class LoginHandler extends ChessHandler{
     public String login(Request req, Response res, DAORecord daoRecord){
         try{
             LoginRequest request = new Gson().fromJson(req.body(), LoginRequest.class);
-            LoginResult result = new LoginService(daoRecord.userDAO(), daoRecord.authDAO()).login(request);
+            LoginResult result = new LoginService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO()).login(request);
             return new Gson().toJson(result);
         } catch (UnauthorizedException e) {
             res.status(401);
