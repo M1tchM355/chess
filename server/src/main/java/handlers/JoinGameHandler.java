@@ -13,6 +13,8 @@ import spark.Response;
 public class JoinGameHandler extends ChessHandler{
     public String joinGame(Request req, Response res, DAORecord daoRecord){
         try{
+            String authToken = req.headers("Authorization");
+            checkAuth(authToken, daoRecord.authDAO());
             JoinGameRequest request = new Gson().fromJson(req.body(), JoinGameRequest.class);
             JoinGameService joinGameService = new JoinGameService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO());
             JoinGameResult result = joinGameService.joinGame(request);

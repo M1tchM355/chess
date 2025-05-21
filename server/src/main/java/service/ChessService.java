@@ -16,6 +16,12 @@ public class ChessService {
         this.userDAO = userDAO;
     }
 
+    public ChessService(AuthDAO authDAO){
+        this.gameDAO = null;
+        this.authDAO = authDAO;
+        this.userDAO = null;
+    }
+
     public AuthData getAuth(String authToken) throws UnauthorizedException{
         return authDAO.getAuth(authToken);
     }

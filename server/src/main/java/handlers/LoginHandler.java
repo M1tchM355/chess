@@ -2,6 +2,7 @@ package handlers;
 
 import com.google.gson.Gson;
 import dataaccess.DAORecord;
+import dataaccess.DataAccessException;
 import request.LoginRequest;
 import result.LoginResult;
 import service.LoginService;
@@ -18,9 +19,12 @@ public class LoginHandler extends ChessHandler{
         } catch (UnauthorizedException e) {
             res.status(401);
             return new Gson().toJson("Error: unauthorized");
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             res.status(400);
             return new Gson().toJson("Error: bad request");
+        } catch (Exception e){
+            res.status(500);
+            return new Gson().toJson("Error: "+e.toString());
         }
     }
 }

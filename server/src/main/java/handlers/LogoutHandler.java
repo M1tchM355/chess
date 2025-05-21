@@ -13,7 +13,9 @@ import spark.Response;
 public class LogoutHandler extends ChessHandler{
     public String logout(Request req, Response res, DAORecord daoRecord){
        try {
-           LogoutRequest request = new Gson().fromJson(req.body(), LogoutRequest.class);
+           String authToken = req.headers("Authorization");
+           checkAuth(authToken, daoRecord.authDAO());
+           LogoutRequest request = new LogoutRequest(authToken);
            LogoutService logoutService = new LogoutService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO());
            LogoutResult result = logoutService.logout(request);
            return new Gson().toJson(result);

@@ -15,8 +15,7 @@ public class CreateGameService extends ChessService{
         super(gameDAO,authDAO,userDAO);
     }
 
-    public CreateGameResult createGame(CreateGameRequest req) throws UnauthorizedException, DataAccessException {
-        AuthData authData = authDAO.getAuth(req.authToken());
+    public CreateGameResult createGame(CreateGameRequest req) throws DataAccessException {
         int gameID = gameDAO.createGame(req.gameName());
         return new CreateGameResult(gameID);
     }

@@ -13,6 +13,8 @@ import spark.Response;
 public class CreateGameHandler extends ChessHandler{
     public String createGame(Request req, Response res, DAORecord daoRecord){
         try{
+            String authToken = req.headers("Authorization");
+            checkAuth(authToken, daoRecord.authDAO());
             CreateGameRequest request = new Gson().fromJson(req.body(), CreateGameRequest.class);
             CreateGameService createGameService = new CreateGameService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO());
             CreateGameResult result = createGameService.createGame(request);

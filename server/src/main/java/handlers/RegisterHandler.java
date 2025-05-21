@@ -2,6 +2,7 @@ package handlers;
 
 import com.google.gson.Gson;
 import dataaccess.DAORecord;
+import dataaccess.DataAccessException;
 import request.RegisterRequest;
 import result.RegisterResult;
 import service.AlreadyTakenException;

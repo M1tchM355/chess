@@ -12,6 +12,8 @@ import spark.Response;
 public class ListGamesHandler extends ChessHandler{
     public String listGames(Request req, Response res, DAORecord daoRecord){
         try{
+            String authToken = req.headers("Authorization");
+            checkAuth(authToken, daoRecord.authDAO());
             ListGamesRequest request = new Gson().fromJson(req.body(), ListGamesRequest.class);
             ListGamesService listGamesService = new ListGamesService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO());
             ListGamesResult result = listGamesService.listGames(request);
@@ -19,9 +21,9 @@ public class ListGamesHandler extends ChessHandler{
         } catch (UnauthorizedException e){
             res.status(401);
             return new Gson().toJson("Error: unauthorized");
-        } catch (Exception e){
+        } catch (Exception e) {
             res.status(500);
-            return new Gson().toJson("Error: "+e.toString());
+            return new Gson().toJson("Error: " + e.toString());
         }
     }
 }

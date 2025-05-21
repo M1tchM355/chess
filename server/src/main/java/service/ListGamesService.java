@@ -14,8 +14,7 @@ public class ListGamesService extends ChessService{
         super(gameDAO,authDAO,userDAO);
     }
 
-    public ListGamesResult listGames(ListGamesRequest req) throws UnauthorizedException{
-        authDAO.getAuth(req.authToken());
+    public ListGamesResult listGames(ListGamesRequest req){
         Collection<GameData> games = gameDAO.listGames();
         return new ListGamesResult(games);
     }
