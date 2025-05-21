@@ -1,8 +1,7 @@
 package server;
 
 import dataaccess.*;
-import handlers.LoginHandler;
-import handlers.RegisterHandler;
+import handlers.*;
 import spark.*;
 
 public class Server {
@@ -44,22 +43,22 @@ public class Server {
     }
 
     private Object clear(Request req, Response res){
-        return new RegisterHandler().register(req, res, daoRecord);
+        return new ClearHandler().clear(req, res, daoRecord);
     }
 
     private Object logout(Request req, Response res){
-        return new RegisterHandler().register(req, res, daoRecord);
+        return new LogoutHandler().logout(req, res, daoRecord);
     }
 
     private Object listGames(Request req, Response res){
-        return new RegisterHandler().register(req, res, daoRecord);
+        return new ListGamesHandler().listGames(req, res, daoRecord);
     }
 
     private Object createGame(Request req, Response res){
-        return new RegisterHandler().register(req, res, daoRecord);
+        return new CreateGameHandler().createGame(req, res, daoRecord);
     }
 
     private Object joinGame(Request req, Response res){
-        return new RegisterHandler().register(req, res, daoRecord);
+        return new JoinGameHandler().joinGame(req, res, daoRecord);
     }
 }
