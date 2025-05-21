@@ -1,6 +1,7 @@
 package server;
 
 import dataaccess.*;
+import handlers.LoginHandler;
 import handlers.RegisterHandler;
 import spark.*;
 
@@ -39,7 +40,7 @@ public class Server {
     }
 
     private Object login(Request req, Response res){
-        return new RegisterHandler().register(req, res, daoRecord);
+        return new LoginHandler().login(req, res, daoRecord);
     }
 
     private Object clear(Request req, Response res){
