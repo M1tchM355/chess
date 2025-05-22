@@ -2,7 +2,6 @@ package handlers;
 
 import com.google.gson.Gson;
 import dataaccess.DAORecord;
-import dataaccess.DataAccessException;
 import request.CreateGameRequest;
 import result.CreateGameResult;
 import service.BadRequestException;
@@ -28,7 +27,7 @@ public class CreateGameHandler extends ChessHandler{
             return new Gson().toJson(new ErrorResponse("Error: bad request"));
         } catch (Exception e) {
             res.status(500);
-            return new Gson().toJson(new ErrorResponse("Error: "+e.toString()));
+            return new Gson().toJson(new ErrorResponse("Error: " + e));
         }
     }
 }

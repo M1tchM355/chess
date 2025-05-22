@@ -16,7 +16,7 @@ public class ClearHandler extends ChessHandler {
             return new Gson().toJson(null);
         } catch (Exception e) {
             res.status(500);
-            return new Gson().toJson(new ErrorResponse("Error: "+e.toString()));
+            return new Gson().toJson(new ErrorResponse("Error: " + e));
         }
     }
 }

@@ -38,8 +38,6 @@ public class LogoutServiceTest {
         userDAO.createUser(user);
         String authToken = "not an authToken";
         LogoutRequest logoutRequest = new LogoutRequest(authToken);
-        Assertions.assertThrows(UnauthorizedException.class, () -> {
-            logoutService.logout(logoutRequest);
-        });
+        Assertions.assertThrows(UnauthorizedException.class, () -> logoutService.logout(logoutRequest));
     }
 }

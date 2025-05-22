@@ -2,7 +2,6 @@ package handlers;
 
 import com.google.gson.Gson;
 import dataaccess.DAORecord;
-import dataaccess.DataAccessException;
 import request.JoinGameRequest;
 import result.JoinGameResult;
 import service.AlreadyTakenException;
@@ -33,7 +32,7 @@ public class JoinGameHandler extends ChessHandler{
             return new Gson().toJson(new ErrorResponse("Error: already taken"));
         } catch (Exception e) {
             res.status(500);
-            return new Gson().toJson(new ErrorResponse("Error: "+e.toString()));
+            return new Gson().toJson(new ErrorResponse("Error: " + e));
         }
     }
 }

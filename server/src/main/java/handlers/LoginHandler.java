@@ -25,7 +25,7 @@ public class LoginHandler extends ChessHandler{
             return new Gson().toJson(new ErrorResponse("Error: bad request"));
         } catch (Exception e){
             res.status(500);
-            return new Gson().toJson(new ErrorResponse("Error: " + e.toString()));
+            return new Gson().toJson(new ErrorResponse("Error: " + e));
         }
     }
 }

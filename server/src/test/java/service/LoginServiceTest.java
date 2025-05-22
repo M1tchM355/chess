@@ -5,9 +5,7 @@ import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import request.LoginRequest;
-import request.RegisterRequest;
 import result.LoginResult;
-import result.RegisterResult;
 
 public class LoginServiceTest {
     @Test
@@ -42,7 +40,7 @@ public class LoginServiceTest {
         userDAO.createUser(new UserData(username,password,email));
         LoginRequest request = new LoginRequest(username,badPass);
         Assertions.assertThrows(UnauthorizedException.class, () -> {
-            LoginResult result = loginService.login(request);
+            loginService.login(request);
         });
     }
 }

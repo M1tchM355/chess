@@ -19,7 +19,7 @@ public class RegisterService extends ChessService{
             throw new BadRequestException("Missing parameter");
         }
         try{
-            UserData userCheck = userDAO.getUser(req.username());
+            userDAO.getUser(req.username());
             throw new AlreadyTakenException("Username is already taken");
         } catch (DataAccessException e) {
             UserData user = new UserData(req.username(),req.password(),req.email());
