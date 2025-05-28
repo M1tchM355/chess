@@ -105,24 +105,22 @@ public class SQLUserDAOTest {
 
     @Test
     public void clearUsersTest() {
-        try {
-            var statement1 = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
-            var statement2 = "SELECT * FROM user";
-            try (var conn = DatabaseManager.getConnection()) {
-                try (var ps = conn.prepareStatement(statement1)) {
-                    ps.setString(1,username);
-                    ps.setString(2,hashedPassword);
-                    ps.setString(3,email);
+        var statement1 = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
+        var statement2 = "SELECT * FROM user";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement1)) {
+                ps.setString(1,username);
+                ps.setString(2,hashedPassword);
+                ps.setString(3,email);
 
-                    ps.executeUpdate();
-                }
+                ps.executeUpdate();
+            }
 
-                new SQLUserDAO().clearUsers();
-                try (var ps = conn.prepareStatement(statement2, RETURN_GENERATED_KEYS)) {
-                    try (var rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            Assertions.fail();
-                        }
+            new SQLUserDAO().clearUsers();
+            try (var ps = conn.prepareStatement(statement2, RETURN_GENERATED_KEYS)) {
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        Assertions.fail();
                     }
                 }
             }

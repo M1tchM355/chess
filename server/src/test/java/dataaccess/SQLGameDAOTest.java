@@ -240,26 +240,24 @@ public class SQLGameDAOTest {
 
     @Test
     public void clearGamesTest() {
-        try {
-            String statement1 = "INSERT INTO game (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
-            var statement2 = "SELECT * FROM game";
-            try (var conn = DatabaseManager.getConnection()) {
-                try (var ps = conn.prepareStatement(statement1)) {
-                    ps.setString(1, whiteUsername1);
-                    ps.setString(2, blackUsername1);
-                    ps.setString(3, gameName1);
-                    ps.setString(4, game1);
+        String statement1 = "INSERT INTO game (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
+        var statement2 = "SELECT * FROM game";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement1)) {
+                ps.setString(1, whiteUsername1);
+                ps.setString(2, blackUsername2);
+                ps.setString(3, gameName1);
+                ps.setString(4, game2);
 
-                    ps.executeUpdate();
-                }
+                ps.executeUpdate();
+            }
 
-                new SQLGameDAO().clearGames();
+            new SQLGameDAO().clearGames();
 
-                try (var ps = conn.prepareStatement(statement2, RETURN_GENERATED_KEYS)) {
-                    try (var rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            Assertions.fail();
-                        }
+            try (var ps = conn.prepareStatement(statement2, RETURN_GENERATED_KEYS)) {
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        Assertions.fail();
                     }
                 }
             }
