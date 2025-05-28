@@ -10,14 +10,14 @@ import result.LoginResult;
 public class LoginServiceTest {
     @Test
     public void loginSuccess(){
-        UserDAO userDAO = new MemoryUserDAO();
-        AuthDAO authDAO = new MemoryAuthDAO();
-        GameDAO gameDAO = new MemoryGameDAO();
-        LoginService loginService = new LoginService(gameDAO, authDAO, userDAO);
-        String username = "username";
-        String password = "pass123";
-        String email = "myemail@gmail.com";
         try {
+            UserDAO userDAO = new MemoryUserDAO();
+            AuthDAO authDAO = new MemoryAuthDAO();
+            GameDAO gameDAO = new MemoryGameDAO();
+            LoginService loginService = new LoginService(gameDAO, authDAO, userDAO);
+            String username = "newusername";
+            String password = "pass123";
+            String email = "myemail@gmail.com";
             userDAO.createUser(new UserData(username,password,email));
             LoginRequest request = new LoginRequest(username,password);
             LoginResult result = loginService.login(request);
