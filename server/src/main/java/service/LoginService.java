@@ -6,6 +6,7 @@ import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import request.LoginRequest;
 import result.LoginResult;
 
@@ -14,7 +15,7 @@ public class LoginService extends ChessService{
         super(gameDAO,authDAO,userDAO);
     }
 
-    public LoginResult login(LoginRequest req) throws DataAccessException,UnauthorizedException, BadRequestException{
+    public LoginResult login(LoginRequest req) throws DataAccessException, UnauthorizedException, BadRequestException{
         if(req.username() == null || req.password() == null){
             throw new BadRequestException("Missing parameter");
         }
@@ -27,6 +28,6 @@ public class LoginService extends ChessService{
     }
 
     private boolean passwordMatches(LoginRequest req, UserData user){
-        return req.password().equals(user.password());
+        return BCrypt.checkpw(req.password(), user.password());
     }
 }
