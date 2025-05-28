@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,22 +48,30 @@ public class SQLGameDAOTest {
                 try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                     ps.setInt(1,gameID);
                     try (var rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            var whiteUser = rs.getString("whiteUsername");
-                            var blackUser = rs.getString("blackUsername");
-                            var retGameName = rs.getString("gameName");
-                            var retGame = rs.getString("game");
-
-                            Assertions.assertNull(whiteUser);
-                            Assertions.assertNull(blackUser);
-                            Assertions.assertEquals(retGameName, gameName1);
-                            String game = new Gson().toJson(new ChessGame());
-                            Assertions.assertEquals(retGame, game);
-                        } else {
-                            Assertions.fail();
-                        }
+                        assertGamesEqual(rs);
                     }
                 }
+            }
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+    }
+
+    private void assertGamesEqual(ResultSet rs) {
+        try {
+            if (rs.next()) {
+                var whiteUser = rs.getString("whiteUsername");
+                var blackUser = rs.getString("blackUsername");
+                var retGameName = rs.getString("gameName");
+                var retGame = rs.getString("game");
+
+                Assertions.assertNull(whiteUser);
+                Assertions.assertNull(blackUser);
+                Assertions.assertEquals(retGameName, gameName1);
+                String game = new Gson().toJson(new ChessGame());
+                Assertions.assertEquals(retGame, game);
+            } else {
+                Assertions.fail();
             }
         } catch (Exception e) {
             Assertions.fail();
@@ -214,10 +223,10 @@ public class SQLGameDAOTest {
         String statement2 = "SELECT whiteUsername, blackUsername, gameName, game FROM game WHERE gameID=?";
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
-                ps.setString(1, whiteUsername1);
+                ps.setString(1, whiteUsername2);
                 ps.setString(2, blackUsername1);
                 ps.setString(3, gameName1);
-                ps.setString(4, game1);
+                ps.setString(4, game2);
 
                 ps.executeUpdate();
             }

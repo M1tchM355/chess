@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.sql.ResultSet;
 import java.util.UUID;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -42,17 +43,25 @@ public class SQLAuthDAOTest {
                 try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                     ps.setString(1,username);
                     try (var rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            var authToken = rs.getString("authToken");
-
-                            Assertions.assertEquals(returnedAuth.authToken(), authToken);
-                        } else {
-                            Assertions.fail();
-                        }
+                        assertAuth(rs, returnedAuth);
                     }
                 }
             }
         } catch (Exception e){
+            Assertions.fail();
+        }
+    }
+
+    private void assertAuth(ResultSet rs, AuthData returnedAuth) {
+        try {
+            if (rs.next()) {
+                var authToken = rs.getString("authToken");
+
+                Assertions.assertEquals(returnedAuth.authToken(), authToken);
+            } else {
+                Assertions.fail();
+            }
+        } catch (Exception e) {
             Assertions.fail();
         }
     }
@@ -152,23 +161,21 @@ public class SQLAuthDAOTest {
 
     @Test
     public void clearAuthsTest() {
-        try {
-            var statement1 = "INSERT INTO auth (username, authToken) VALUES (?, ?)";
-            var statement2 = "SELECT * FROM auth";
-            try (var conn = DatabaseManager.getConnection()) {
-                try (var ps = conn.prepareStatement(statement1)) {
-                    ps.setString(1,username);
-                    ps.setString(2,authToken);
+        var statement1 = "INSERT INTO auth (username, authToken) VALUES (?, ?)";
+        var statement2 = "SELECT * FROM auth";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement1)) {
+                ps.setString(1,username);
+                ps.setString(2,authToken);
 
-                    ps.executeUpdate();
-                }
+                ps.executeUpdate();
+            }
 
-                new SQLAuthDAO().clearAuths();
-                try (var ps = conn.prepareStatement(statement2, RETURN_GENERATED_KEYS)) {
-                    try (var rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            Assertions.fail();
-                        }
+            new SQLAuthDAO().clearAuths();
+            try (var ps = conn.prepareStatement(statement2, RETURN_GENERATED_KEYS)) {
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        Assertions.fail();
                     }
                 }
             }
