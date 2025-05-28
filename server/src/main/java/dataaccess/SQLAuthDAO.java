@@ -18,7 +18,7 @@ public class SQLAuthDAO implements AuthDAO{
             CREATE TABLE IF NOT EXISTS auth (
               authToken varchar(256) NOT NULL,
               username varchar(256) NOT NULL,
-              PRIMARY KEY (username)
+              PRIMARY KEY (authToken)
             )
             """
     };
@@ -41,7 +41,7 @@ public class SQLAuthDAO implements AuthDAO{
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement)) {
                 String token = UUID.randomUUID().toString();
-                ps.setString(1,user.username());
+                ps.setString(1, user.username());
                 ps.setString(2, token);
                 ps.executeUpdate();
 
