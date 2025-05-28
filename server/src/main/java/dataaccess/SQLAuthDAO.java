@@ -5,6 +5,7 @@ import model.UserData;
 import service.UnauthorizedException;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.UUID;
 
 public class SQLAuthDAO implements AuthDAO{
@@ -55,7 +56,7 @@ public class SQLAuthDAO implements AuthDAO{
     public AuthData getAuth(String authToken) throws UnauthorizedException, DataAccessException {
         var statement = "SELECT username FROM auth WHERE authToken=?";
         try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
+            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1,authToken);
                 try (var rs = ps.executeQuery()) {
                     rs.next();

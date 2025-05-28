@@ -4,6 +4,7 @@ import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
@@ -41,7 +42,7 @@ public class SQLUserDAO implements UserDAO {
     public UserData getUser(String username) throws DataAccessException {
         var statement = "SELECT password, email FROM user WHERE username=?";
         try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
+            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 ps.setString(1,username);
                 try (var rs = ps.executeQuery()) {
                     rs.next();
@@ -61,7 +62,7 @@ public class SQLUserDAO implements UserDAO {
         var statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
         String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
+            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 ps.setString(1, user.username());
                 ps.setString(2, hashedPassword);
                 ps.setString(3, user.email());
