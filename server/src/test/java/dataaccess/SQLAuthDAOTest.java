@@ -58,6 +58,12 @@ public class SQLAuthDAOTest {
     }
 
     @Test
+    public void createAuthFailTest() {
+        UserData user = new UserData(null, null, null);
+        Assertions.assertThrows(DataAccessException.class, () -> new SQLAuthDAO().createAuth(user));
+    }
+
+    @Test
     public void getAuthSuccessTest() {
         String statement = "INSERT INTO auth (username, authToken) VALUES (?, ?)";
         try (var conn = DatabaseManager.getConnection()) {
@@ -71,6 +77,24 @@ public class SQLAuthDAOTest {
             AuthData returnedAuth = new SQLAuthDAO().getAuth(authToken);
             Assertions.assertEquals(username,returnedAuth.username());
             Assertions.assertEquals(authToken,returnedAuth.authToken());
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    public void getAuthFailTest() {
+        String statement = "INSERT INTO auth (username, authToken) VALUES (?, ?)";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1,username);
+                ps.setString(2,"");
+
+                ps.executeUpdate();
+            }
+
+            AuthData returnedAuth = new SQLAuthDAO().getAuth(authToken);
+            Assertions.assertNull(returnedAuth);
         } catch (Exception e) {
             Assertions.fail();
         }
@@ -92,6 +116,31 @@ public class SQLAuthDAOTest {
             try (var ps = conn.prepareStatement("SELECT * FROM auth", RETURN_GENERATED_KEYS)) {
                 try (var rs = ps.executeQuery()) {
                     if (rs.next()) {
+                        Assertions.fail();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    public void deleteAuthFailTest() {
+        String statement = "INSERT INTO auth (username, authToken) VALUES (?, ?)";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1,username);
+                ps.setString(2,authToken);
+
+                ps.executeUpdate();
+            }
+
+            new SQLAuthDAO().deleteAuth(new AuthData(null,null));
+
+            try (var ps = conn.prepareStatement("SELECT * FROM auth", RETURN_GENERATED_KEYS)) {
+                try (var rs = ps.executeQuery()) {
+                    if (!rs.next()) {
                         Assertions.fail();
                     }
                 }
