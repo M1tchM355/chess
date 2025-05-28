@@ -51,7 +51,7 @@ public class SQLUserDAO implements UserDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()));
+            throw new DataAccessException(String.format("unable to query database: %s, %s", statement, e.getMessage()));
         }
     }
 
