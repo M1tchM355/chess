@@ -100,11 +100,7 @@ public class SQLUserDAOTest {
     @Test
     public void createUserFailTest() {
         UserData user = new UserData(username, password, null);
-        try {
-            Assertions.assertThrows(DataAccessException.class, () -> new SQLUserDAO().createUser(user));
-        } catch (Exception e){
-            Assertions.fail();
-        }
+        Assertions.assertThrows(DataAccessException.class, () -> new SQLUserDAO().createUser(user));
     }
 
     @Test

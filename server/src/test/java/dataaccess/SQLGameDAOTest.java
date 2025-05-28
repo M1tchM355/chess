@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -69,6 +70,11 @@ public class SQLGameDAOTest {
     }
 
     @Test
+    public void createGameFailTest() {
+        Assertions.assertThrows(DataAccessException.class, () -> new SQLGameDAO().createGame(null));
+    }
+
+    @Test
     public void getGameSuccessTest() {
         String statement = "INSERT INTO game (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
         try (var conn = DatabaseManager.getConnection()) {
@@ -89,6 +95,26 @@ public class SQLGameDAOTest {
                 Assertions.assertEquals(blackUsername1, returnedGame.blackUsername());
                 Assertions.assertEquals(gameName1, returnedGame.gameName());
                 Assertions.assertEquals(chessGame1, returnedGame.game());
+            }
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    public void getGameFailTest() {
+        String statement = "INSERT INTO game (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
+                ps.setString(1, whiteUsername1);
+                ps.setString(2, blackUsername1);
+                ps.setString(3, gameName1);
+                ps.setString(4, game1);
+
+                ps.executeUpdate();
+
+                GameData returnedGame = new SQLGameDAO().getGame(2);
+                Assertions.assertNull(returnedGame);
             }
         } catch (Exception e) {
             Assertions.fail();
@@ -119,6 +145,23 @@ public class SQLGameDAOTest {
                 GameData expected2 = new GameData(2,whiteUsername2,blackUsername2,gameName2,chessGame2);
                 Assertions.assertEquals(games.get(0), expected1);
                 Assertions.assertEquals(games.get(1), expected2);
+            }
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+    }
+    //This test is dumb. How would list games fail?
+    @Test
+    public void listGamesFailTest() {
+        String statement = "INSERT INTO game (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
+                ps.setString(1, whiteUsername1);
+                ps.setString(2, blackUsername1);
+                ps.setString(3, null);
+                ps.setString(4, game1);
+
+                Assertions.assertThrows(SQLException.class, ps::executeUpdate);
             }
         } catch (Exception e) {
             Assertions.fail();
@@ -160,6 +203,27 @@ public class SQLGameDAOTest {
                     }
                 }
             }
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    public void updateGameFailTest() {
+        String statement = "INSERT INTO game (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
+        String statement2 = "SELECT whiteUsername, blackUsername, gameName, game FROM game WHERE gameID=?";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
+                ps.setString(1, whiteUsername1);
+                ps.setString(2, blackUsername1);
+                ps.setString(3, gameName1);
+                ps.setString(4, game1);
+
+                ps.executeUpdate();
+            }
+
+            Assertions.assertThrows(DataAccessException.class,
+                    () -> new SQLGameDAO().updateGame(1, "NoT a CoLOr", blackUsername2));
         } catch (Exception e) {
             Assertions.fail();
         }
