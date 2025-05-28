@@ -2,6 +2,7 @@ package dataaccess;
 
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
+import service.UnauthorizedException;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -45,11 +46,14 @@ public class SQLUserDAO implements UserDAO {
             try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 ps.setString(1,username);
                 try (var rs = ps.executeQuery()) {
-                    rs.next();
-                    var password = rs.getString("password");
-                    var email = rs.getString("email");
+                    if(rs.next()) {
+                        var password = rs.getString("password");
+                        var email = rs.getString("email");
 
-                    return new UserData(username,password,email);
+                        return new UserData(username, password, email);
+                    } else {
+                        return null;
+                    }
                 }
             }
         } catch (SQLException e) {

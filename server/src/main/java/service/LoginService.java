@@ -20,6 +20,9 @@ public class LoginService extends ChessService{
             throw new BadRequestException("Missing parameter");
         }
         UserData user = userDAO.getUser(req.username());
+        if(user == null) {
+            throw new UnauthorizedException("User does not exist");
+        }
         if (!passwordMatches(req,user)){
             throw new UnauthorizedException("Wrong password");
         }
