@@ -51,6 +51,25 @@ public class SQLUserDAOTest {
     }
 
     @Test
+    public void getUserFailTest() {
+        String statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1,username);
+                ps.setString(2,hashedPassword);
+                ps.setString(3,email);
+
+                ps.executeUpdate();
+            }
+
+            UserData returnedUser = new SQLUserDAO().getUser("bad username");
+            Assertions.assertNull(returnedUser);
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
     public void createUserSuccessTest() {
         UserData user = new UserData(username, password, email);
         try {
@@ -73,6 +92,16 @@ public class SQLUserDAOTest {
                     }
                 }
             }
+        } catch (Exception e){
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    public void createUserFailTest() {
+        UserData user = new UserData(username, password, null);
+        try {
+            Assertions.assertThrows(DataAccessException.class, () -> new SQLUserDAO().createUser(user));
         } catch (Exception e){
             Assertions.fail();
         }
