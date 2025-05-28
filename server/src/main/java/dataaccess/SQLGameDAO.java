@@ -69,13 +69,16 @@ public class SQLGameDAO implements GameDAO {
             try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1,gameID);
                 try (var rs = ps.executeQuery()) {
-                    rs.next();
-                    var whiteUsername = rs.getString("whiteUsername");
-                    var blackUsername = rs.getString("blackUsername");
-                    var gameName = rs.getString("gameName");
-                    var jsonGame = rs.getString("game");
-                    ChessGame game = new Gson().fromJson(jsonGame,ChessGame.class);
-                    return new GameData(gameID,whiteUsername,blackUsername,gameName,game);
+                    if(rs.next()) {
+                        var whiteUsername = rs.getString("whiteUsername");
+                        var blackUsername = rs.getString("blackUsername");
+                        var gameName = rs.getString("gameName");
+                        var jsonGame = rs.getString("game");
+                        ChessGame game = new Gson().fromJson(jsonGame, ChessGame.class);
+                        return new GameData(gameID, whiteUsername, blackUsername, gameName, game);
+                    } else {
+                        return null;
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -109,7 +112,7 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public void updateGame(int gameID, String playerColor, String username) throws DataAccessException {
-        var statement = "";
+        String statement;
         if (playerColor.equals("WHITE")) {
             statement = "UPDATE game SET whiteUsername=? WHERE gameID=?";
         } else if (playerColor.equals("BLACK")) {

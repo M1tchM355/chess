@@ -42,10 +42,13 @@ public class SQLAuthDAOTest {
                 try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                     ps.setString(1,username);
                     try (var rs = ps.executeQuery()) {
-                        rs.next();
-                        var authToken = rs.getString("authToken");
+                        if (rs.next()) {
+                            var authToken = rs.getString("authToken");
 
-                        Assertions.assertEquals(returnedAuth.authToken(),authToken);
+                            Assertions.assertEquals(returnedAuth.authToken(), authToken);
+                        } else {
+                            Assertions.fail();
+                        }
                     }
                 }
             }
