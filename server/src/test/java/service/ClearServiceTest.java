@@ -1,15 +1,12 @@
 package service;
 
 import dataaccess.*;
-import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import request.ClearRequest;
-import request.ListGamesRequest;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ClearServiceTest {
     @Test

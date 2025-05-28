@@ -6,8 +6,6 @@ import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import request.JoinGameRequest;
-import request.ListGamesRequest;
-import result.JoinGameResult;
 
 public class JoinGameServiceTest {
     @Test

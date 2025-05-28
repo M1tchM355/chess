@@ -17,7 +17,12 @@ public class CreateGameService extends ChessService{
         if(req.gameName() == null){
             throw new BadRequestException("Missing parameter");
         }
-        int gameID = gameDAO.createGame(req.gameName());
+        int gameID = 0;
+        try {
+            gameID = gameDAO.createGame(req.gameName());
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
         return new CreateGameResult(gameID);
     }
 }

@@ -14,7 +14,7 @@ public class SQLAuthDAO implements AuthDAO{
 
     private final String[] createStatements = {
             """
-            CREATE TABLE IF NOT EXISTS  auth (
+            CREATE TABLE IF NOT EXISTS auth (
               authToken varchar(256) NOT NULL,
               username varchar(256) NOT NULL,
               PRIMARY KEY (`username`),
@@ -54,8 +54,8 @@ public class SQLAuthDAO implements AuthDAO{
     @Override
     public AuthData getAuth(String authToken) throws UnauthorizedException, DataAccessException {
         var statement = "SELECT username FROM auth WHERE authToken=?";
-        try (var connn = DatabaseManager.getConnection()) {
-            try (var ps = connn.prepareStatement(statement)) {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement)) {
                 ps.setString(1,authToken);
                 try (var rs = ps.executeQuery()) {
                     var username = rs.getString("username");

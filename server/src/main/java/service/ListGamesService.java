@@ -15,7 +15,12 @@ public class ListGamesService extends ChessService{
     }
 
     public ListGamesResult listGames(ListGamesRequest req){
-        Collection<GameData> games = gameDAO.listGames();
+        Collection<GameData> games = null;
+        try {
+            games = gameDAO.listGames();
+        } catch (dataaccess.DataAccessException e) {
+            throw new RuntimeException(e);
+        }
         return new ListGamesResult(games);
     }
 }

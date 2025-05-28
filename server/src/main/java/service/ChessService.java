@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.AuthDAO;
+import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
@@ -22,7 +23,7 @@ public class ChessService {
         this.userDAO = null;
     }
 
-    public AuthData getAuth(String authToken) throws UnauthorizedException{
+    public AuthData getAuth(String authToken) throws UnauthorizedException, DataAccessException {
         return authDAO.getAuth(authToken);
     }
 }
