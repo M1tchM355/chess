@@ -5,6 +5,7 @@ import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
+import model.GameData;
 import request.JoinGameRequest;
 import result.JoinGameResult;
 
@@ -19,7 +20,16 @@ public class JoinGameService extends ChessService{
             throw new BadRequestException("Missing parameter");
         }
         AuthData authData = authDAO.getAuth(req.authToken());
-        gameDAO.updateGame(req.gameID(),req.playerColor(),authData.username());
+        String playerCol = req.playerColor();
+        if (!playerCol.equals("WHITE") && !playerCol.equals("BLACK")) {
+            throw new BadRequestException("Invalid color");
+        }
+        GameData game = gameDAO.getGame(req.gameID());
+        if ((playerCol.equals("WHITE") && game.whiteUsername() == null) || (playerCol.equals("BLACK") && game.blackUsername() == null)) {
+            gameDAO.updateGame(req.gameID(),playerCol,authData.username());
+        } else {
+            throw new AlreadyTakenException("Color already taken");
+        }
         return new JoinGameResult();
     }
 }
