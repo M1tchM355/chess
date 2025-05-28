@@ -59,10 +59,13 @@ public class SQLAuthDAO implements AuthDAO{
             try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1,authToken);
                 try (var rs = ps.executeQuery()) {
-                    rs.next();
-                    var username = rs.getString("username");
+                    if(rs.next()) {
+                        var username = rs.getString("username");
 
-                    return new AuthData(authToken,username);
+                        return new AuthData(authToken, username);
+                    } else {
+                        return null;
+                    }
                 }
             }
         } catch (SQLException e) {

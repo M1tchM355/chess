@@ -15,6 +15,9 @@ public class LogoutService extends ChessService{
 
     public LogoutResult logout(LogoutRequest req) throws UnauthorizedException, DataAccessException {
         AuthData authData = authDAO.getAuth(req.authToken());
+        if (authData == null) {
+            throw new UnauthorizedException("Unauthorized");
+        }
         authDAO.deleteAuth(authData);
         return new LogoutResult();
     }
