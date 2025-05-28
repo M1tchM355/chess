@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import model.GameData;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +23,7 @@ public class SQLGameDAO implements GameDAO {
               blackUsername varchar(256),
               gameName varchar(256) NOT NULL,
               game TEXT NOT NULL,
-              PRIMARY KEY (`gameID`),
+              PRIMARY KEY (gameID)
             )
             """
     };
@@ -53,6 +54,7 @@ public class SQLGameDAO implements GameDAO {
                 ps.executeUpdate();
 
                 var rs = ps.getGeneratedKeys();
+                rs.next();
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
@@ -64,9 +66,10 @@ public class SQLGameDAO implements GameDAO {
     public GameData getGame(int gameID) throws DataAccessException {
         var statement = "SELECT whiteUsername, blackUsername, gameName, game FROM game WHERE gameID=?";
         try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
+            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1,gameID);
                 try (var rs = ps.executeQuery()) {
+                    rs.next();
                     var whiteUsername = rs.getString("whiteUsername");
                     var blackUsername = rs.getString("blackUsername");
                     var gameName = rs.getString("gameName");

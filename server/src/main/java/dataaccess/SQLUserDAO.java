@@ -19,7 +19,7 @@ public class SQLUserDAO implements UserDAO {
               username varchar(256) NOT NULL,
               password varchar(256) NOT NULL,
               email varchar(256) NOT NULL,
-              PRIMARY KEY (`username`),
+              PRIMARY KEY (username)
             )
             """
     };
@@ -44,6 +44,7 @@ public class SQLUserDAO implements UserDAO {
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setString(1,username);
                 try (var rs = ps.executeQuery()) {
+                    rs.next();
                     var password = rs.getString("password");
                     var email = rs.getString("email");
 
