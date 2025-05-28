@@ -17,7 +17,7 @@ public class LoginHandler extends ChessHandler{
             LoginRequest request = new Gson().fromJson(req.body(), LoginRequest.class);
             LoginResult result = new LoginService(daoRecord.gameDAO(), daoRecord.authDAO(), daoRecord.userDAO()).login(request);
             return new Gson().toJson(result);
-        } catch (UnauthorizedException | DataAccessException e) {
+        } catch (UnauthorizedException e) {
             res.status(401);
             return new Gson().toJson(new ErrorResponse("Error: unauthorized"));
         } catch (BadRequestException e) {
