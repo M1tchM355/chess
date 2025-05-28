@@ -8,7 +8,11 @@ public class Server {
     private final DAORecord daoRecord;
 
     public Server(){
-        this.daoRecord = new DAORecord(new MemoryUserDAO(),new MemoryAuthDAO(),new MemoryGameDAO());
+        try {
+            this.daoRecord = new DAORecord(new SQLUserDAO(), new SQLAuthDAO(), new SQLGameDAO());
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public int run(int desiredPort) {
