@@ -24,6 +24,10 @@ public class ChessService {
     }
 
     public AuthData getAuth(String authToken) throws UnauthorizedException, DataAccessException {
-        return authDAO.getAuth(authToken);
+        AuthData auth = authDAO.getAuth(authToken);
+        if (auth == null){
+            throw new UnauthorizedException("Unauthorized");
+        }
+        return auth;
     }
 }
