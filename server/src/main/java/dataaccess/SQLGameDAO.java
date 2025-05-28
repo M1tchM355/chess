@@ -12,11 +12,8 @@ import java.util.List;
 
 public class SQLGameDAO implements GameDAO {
     public SQLGameDAO() throws DataAccessException{
-        configureDatabase();
-    }
-
-    private final String[] createStatements = {
-            """
+        String[] createStatements = {
+                """
             CREATE TABLE IF NOT EXISTS game (
               gameID INT NOT NULL AUTO_INCREMENT,
               whiteUsername varchar(256),
@@ -26,21 +23,9 @@ public class SQLGameDAO implements GameDAO {
               PRIMARY KEY (gameID)
             )
             """
-    };
-
-    private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
-        }
+        };
+        DatabaseManager.configureDatabase(createStatements);
     }
-
 
     @Override
     public int createGame(String gameName) throws DataAccessException {

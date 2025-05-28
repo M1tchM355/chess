@@ -10,31 +10,18 @@ import java.util.UUID;
 
 public class SQLAuthDAO implements AuthDAO{
     public SQLAuthDAO() throws DataAccessException{
-        configureDatabase();
-    }
-
-    private final String[] createStatements = {
-            """
+        String[] createStatements = {
+                """
             CREATE TABLE IF NOT EXISTS auth (
               authToken varchar(256) NOT NULL,
               username varchar(256) NOT NULL,
               PRIMARY KEY (authToken)
             )
             """
-    };
-
-    private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
-        }
+        };
+        DatabaseManager.configureDatabase(createStatements);
     }
+
     @Override
     public AuthData createAuth(UserData user) throws DataAccessException{
         var statement = "INSERT INTO auth (username, authToken) VALUES (?, ?)";
