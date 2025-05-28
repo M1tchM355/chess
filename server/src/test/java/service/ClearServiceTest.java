@@ -22,10 +22,10 @@ public class ClearServiceTest {
         String password = "pass123";
         String email = "myemail@gmail.com";
         UserData user = new UserData(username,password,email);
-        userDAO.createUser(user);
-        ClearRequest request = new ClearRequest();
-        gameDAO.createGame("game1");
         try {
+            userDAO.createUser(user);
+            ClearRequest request = new ClearRequest();
+            gameDAO.createGame("game1");
             clearService.clear(request);
             Assertions.assertEquals(new ArrayList<>(), new ArrayList<>(gameDAO.listGames()));
         } catch (Exception e) {

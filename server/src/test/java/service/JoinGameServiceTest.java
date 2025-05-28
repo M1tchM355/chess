@@ -20,11 +20,11 @@ public class JoinGameServiceTest {
         String password = "pass123";
         String email = "myemail@gmail.com";
         UserData user = new UserData(username,password,email);
-        userDAO.createUser(user);
-        String authToken = authDAO.createAuth(user).authToken();
-        int gameID = gameDAO.createGame("game1");
-        JoinGameRequest request = new JoinGameRequest("WHITE",gameID,authToken);
         try {
+            userDAO.createUser(user);
+            String authToken = authDAO.createAuth(user).authToken();
+            int gameID = gameDAO.createGame("game1");
+            JoinGameRequest request = new JoinGameRequest("WHITE",gameID,authToken);
             joinGameService.joinGame(request);
             GameData game = gameDAO.getGame(gameID);
             String whiteUsername = game.whiteUsername();
@@ -44,15 +44,15 @@ public class JoinGameServiceTest {
         String password = "pass123";
         String email = "myemail@gmail.com";
         UserData user = new UserData(username,password,email);
-        userDAO.createUser(user);
-        String authToken = authDAO.createAuth(user).authToken();
-        int gameID = gameDAO.createGame("game1");
         try {
+            userDAO.createUser(user);
+            String authToken = authDAO.createAuth(user).authToken();
+            int gameID = gameDAO.createGame("game1");
             gameDAO.updateGame(gameID, "WHITE", "other username");
+            JoinGameRequest request = new JoinGameRequest("WHITE",gameID,authToken);
+            Assertions.assertThrows(AlreadyTakenException.class, () -> joinGameService.joinGame(request));
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
-        JoinGameRequest request = new JoinGameRequest("WHITE",gameID,authToken);
-        Assertions.assertThrows(AlreadyTakenException.class, () -> joinGameService.joinGame(request));
     }
 }

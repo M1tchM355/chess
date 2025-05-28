@@ -14,7 +14,7 @@ public class RegisterService extends ChessService{
         super(gameDAO,authDAO,userDAO);
     }
 
-    public RegisterResult register(RegisterRequest req) throws AlreadyTakenException, BadRequestException{
+    public RegisterResult register(RegisterRequest req) throws AlreadyTakenException, BadRequestException, DataAccessException{
         if(req.username() == null || req.password() == null || req.email() == null){
             throw new BadRequestException("Missing parameter");
         }

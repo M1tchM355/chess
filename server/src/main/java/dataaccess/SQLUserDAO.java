@@ -1,8 +1,12 @@
 package dataaccess;
 
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
+
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.sql.Types.NULL;
 
 public class SQLUserDAO implements UserDAO {
     public SQLUserDAO() throws DataAccessException{
@@ -35,16 +39,46 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return null;
+        var statement = "SELECT password, email FROM user WHERE username=?";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1,username);
+                try (var rs = ps.executeQuery()) {
+                    var password = rs.getString("password");
+                    var email = rs.getString("email");
+
+                    return new UserData(username,password,email);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()));
+        }
     }
 
     @Override
-    public void createUser(UserData user) {
-
+    public void createUser(UserData user) throws DataAccessException {
+        var statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, user.username());
+                ps.setString(2, hashedPassword);
+                ps.setString(3, user.email());
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()));
+        }
     }
 
     @Override
-    public void clearUsers() {
-
+    public void clearUsers() throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement("TRUNCATE user")) {
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(String.format("unable to clear database: %s", e.getMessage()));
+        }
     }
 }

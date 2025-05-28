@@ -20,11 +20,11 @@ public class CreateGameServiceTest {
         String password = "pass123";
         String email = "myemail@gmail.com";
         UserData user = new UserData(username,password,email);
-        userDAO.createUser(user);
-        String authToken = authDAO.createAuth(user).authToken();
-        String gameName = "Really cool game name";
-        CreateGameRequest request = new CreateGameRequest(authToken, gameName);
         try{
+            userDAO.createUser(user);
+            String authToken = authDAO.createAuth(user).authToken();
+            String gameName = "Really cool game name";
+            CreateGameRequest request = new CreateGameRequest(authToken, gameName);
             int gameID = createGameService.createGame(request).gameID();
             GameData game = gameDAO.getGame(gameID);
             Assertions.assertEquals(game.gameName(),gameName);
@@ -35,19 +35,23 @@ public class CreateGameServiceTest {
 
     @Test
     public void createGameFail(){
-        UserDAO userDAO = new MemoryUserDAO();
-        AuthDAO authDAO = new MemoryAuthDAO();
-        GameDAO gameDAO = new MemoryGameDAO();
-        CreateGameService createGameService = new CreateGameService(gameDAO, authDAO, userDAO);
-        String username = "username";
-        String password = "pass123";
-        String email = "myemail@gmail.com";
-        UserData user = new UserData(username,password,email);
-        userDAO.createUser(user);
-        String authToken = authDAO.createAuth(user).authToken();
-        CreateGameRequest request = new CreateGameRequest(authToken, null);
-        Assertions.assertThrows(BadRequestException.class, () -> {
-            createGameService.createGame(request);
-        });
+        try {
+            UserDAO userDAO = new MemoryUserDAO();
+            AuthDAO authDAO = new MemoryAuthDAO();
+            GameDAO gameDAO = new MemoryGameDAO();
+            CreateGameService createGameService = new CreateGameService(gameDAO, authDAO, userDAO);
+            String username = "username";
+            String password = "pass123";
+            String email = "myemail@gmail.com";
+            UserData user = new UserData(username, password, email);
+            userDAO.createUser(user);
+            String authToken = authDAO.createAuth(user).authToken();
+            CreateGameRequest request = new CreateGameRequest(authToken, null);
+            Assertions.assertThrows(BadRequestException.class, () -> {
+                createGameService.createGame(request);
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
