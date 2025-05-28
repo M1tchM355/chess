@@ -30,7 +30,7 @@ public class RegisterServiceTest {
                 AuthData addedAuth = authDAO.getAuth(res.authToken());
             }, "Could not find the auth");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Assertions.fail();
         }
     }
 
@@ -50,7 +50,7 @@ public class RegisterServiceTest {
                 RegisterResult res2 = registerService.register(req);
             });
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Assertions.fail();
         }
     }
 }
