@@ -1,5 +1,7 @@
 package ui;
 
+import server.ServerFacade;
+
 public class Client {
     private final ServerFacade server;
     private final String serverUrl;
