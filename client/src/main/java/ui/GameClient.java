@@ -5,6 +5,8 @@ import server.ResponseException;
 
 import java.util.Arrays;
 
+import static ui.EscapeSequences.*;
+
 public class GameClient extends Client {
     public GameClient(String serverURL){
         super(serverURL);
@@ -29,9 +31,5 @@ public class GameClient extends Client {
                 quit - quit application
                 help - see possible commands
                 """;
-    }
-
-    public String printGame(ChessGame game) {
-        return null;
     }
 }
