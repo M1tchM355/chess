@@ -1,5 +1,9 @@
 package ui;
 
+import request.LoginRequest;
+import result.LoginResult;
+import server.ResponseException;
+
 import java.util.Arrays;
 
 public class PreloginClient extends Client {
@@ -32,12 +36,18 @@ public class PreloginClient extends Client {
                 """;
     }
 
-    public String login(String... params){
-
-        return "";
+    public String login(String... params) throws ResponseException {
+        if (params.length == 2){
+            String username = params[0];
+            String password = params[1];
+            LoginRequest request = new LoginRequest(username, password);
+            LoginResult result = this.server.login(request);
+            return "Welcome " + username + "! ";
+        }
+        throw new ResponseException(400, "Expected login <USERNAME> <PASSWORD>");
     }
 
-    public String register(String... params){
+    public String register(String... params) throws ResponseException {
         return "";
     }
 }
