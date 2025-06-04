@@ -15,12 +15,20 @@ public class PreloginClient extends Client {
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 case "login" -> login(params);
-                case "help" -> help(params);
                 case "register" -> register(params);
                 default -> help();
             };
         } catch (ResponseException ex) {
             return ex.getMessage();
         }
+    }
+
+    public String help(){
+        return """
+                register <USERNAME> <PASSWORD> <EMAIL> - to create an account
+                login <USERNAME> <PASSWORD> - to login
+                quit - quit application
+                help - see possible commands
+                """;
     }
 }
