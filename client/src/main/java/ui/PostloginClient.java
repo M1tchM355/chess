@@ -87,12 +87,12 @@ public class PostloginClient extends Client {
                 throw new ResponseException(400, "You must first list the games");
             }
             int num = Integer.parseInt(params[0]);
-            Integer ID = gameMap.get(num);
-            if (ID == null) {
+            Integer id = gameMap.get(num);
+            if (id == null) {
                 throw new ResponseException(400, "Invalid ID");
             }
             String color = params[1].toUpperCase();
-            JoinGameRequest request = new JoinGameRequest(color, ID, authToken);
+            JoinGameRequest request = new JoinGameRequest(color, id, authToken);
             this.server.joinGame(request);
             return "You joined the game.";
         }

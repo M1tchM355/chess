@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import server.ResponseException;
 
 import java.util.Arrays;
@@ -28,5 +29,9 @@ public class GameClient extends Client {
                 quit - quit application
                 help - see possible commands
                 """;
+    }
+
+    public String printGame(ChessGame game) {
+        return null;
     }
 }
