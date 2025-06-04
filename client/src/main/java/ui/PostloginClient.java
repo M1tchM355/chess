@@ -1,8 +1,10 @@
 package ui;
 
 import request.LogoutRequest;
+import result.LogoutResult;
 import server.ResponseException;
 
+import java.sql.Array;
 import java.util.Arrays;
 
 public class PostloginClient extends Client {
@@ -16,12 +18,14 @@ public class PostloginClient extends Client {
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
+            //var params = Arrays.copyOf(paramsNoAuth, paramsNoAuth.length + 1);
+            //params[params.length - 1] = this.authToken;
             return switch (cmd) {
                 case "create" -> create(params);
-                case "list" -> list();
+                case "list" -> list(params);
                 case "join" -> join(params);
                 case "observe" -> observe(params);
-                case "logout" -> logout();
+                case "logout" -> logout(params);
                 default -> help();
             };
         } catch (ResponseException ex) {
@@ -45,7 +49,7 @@ public class PostloginClient extends Client {
         return "";
     }
 
-    public String list() throws ResponseException {
+    public String list(String... params) throws ResponseException {
         return "";
     }
 
@@ -57,8 +61,10 @@ public class PostloginClient extends Client {
         return "";
     }
 
-    public String logout() throws ResponseException {
-        LogoutRequest request = new LogoutRequest(null);
+    public String logout(String... params) throws ResponseException {
+        LogoutRequest request = new LogoutRequest(this.authToken);
+        LogoutResult result = this.server.logout(request);
+        authToken = null;
         return "Bye!";
     }
 }

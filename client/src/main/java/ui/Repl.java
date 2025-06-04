@@ -36,14 +36,18 @@ public class Repl {
                 result = activeClient.eval(line);
                 System.out.print(SET_TEXT_COLOR_BLUE + result);
                 String firstWord = result.split(" ")[0];
+                authToken = activeClient.getAuthToken();
                 if (firstWord.equals("Welcome")) {
                     loggedIn = true;
                     activeClient = postloginClient;
-                } else if (firstWord.equals("Bye")) {
+                    postloginClient.setAuthToken(authToken);
+                    gameClient.setAuthToken(authToken);
+                } else if (firstWord.equals("Bye!")) {
                     loggedIn = false;
                     activeClient = preloginClient;
+                    postloginClient.setAuthToken(null);
+                    gameClient.setAuthToken(null);
                 }
-                authToken = activeClient.getAuthToken();
             } catch (Throwable e) {
                 var msg = e.toString();
                 System.out.print(msg);
@@ -54,9 +58,9 @@ public class Repl {
 
     private void printPrompt() {
         if (!loggedIn) {
-            System.out.print("\n NOT LOGGED IN >>> " + SET_TEXT_COLOR_GREEN);
+            System.out.print(SET_TEXT_COLOR_LIGHT_GREY + "\n NOT LOGGED IN >>> " + SET_TEXT_COLOR_GREEN);
         } else {
-            System.out.print("\n LOGGED IN >>> " + SET_TEXT_COLOR_GREEN);
+            System.out.print(SET_TEXT_COLOR_LIGHT_GREY + "\n LOGGED IN >>> " + SET_TEXT_COLOR_GREEN);
         }
     }
 
