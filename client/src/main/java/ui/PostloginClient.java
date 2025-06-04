@@ -91,7 +91,7 @@ public class PostloginClient extends Client {
             if (ID == null) {
                 throw new ResponseException(400, "Invalid ID");
             }
-            String color = params[1];
+            String color = params[1].toUpperCase();
             JoinGameRequest request = new JoinGameRequest(color, ID, authToken);
             this.server.joinGame(request);
             return "You joined the game.";
@@ -100,7 +100,10 @@ public class PostloginClient extends Client {
     }
 
     public String observe(String... params) throws ResponseException {
-        return "";
+        if (params.length == 1) {
+            return "Observing game " + params[0];
+        }
+        throw new ResponseException(400, "Expected observe <ID>");
     }
 
     public String logout(String... params) throws ResponseException {
