@@ -14,37 +14,37 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    public RegisterResult register(RegisterRequest req) {
+    public RegisterResult register(RegisterRequest req) throws ResponseException {
         String path = "/user";
         return this.makeRequest("POST", path, req, RegisterResult.class);
     }
 
-    public LoginResult login(LoginRequest req) {
+    public LoginResult login(LoginRequest req) throws ResponseException {
         String path = "/session";
         return this.makeRequest("POST", path, req, LoginResult.class);
     }
 
-    public void clear(ClearRequest req) {
+    public void clear(ClearRequest req) throws ResponseException {
         String path = "/db";
         this.makeRequest("DELETE", path, req, null);
     }
 
-    public LogoutResult logout(LogoutRequest req) {
+    public LogoutResult logout(LogoutRequest req) throws ResponseException {
         String path = "/session";
         return this.makeRequest("DELETE", path, req, LogoutResult.class);
     }
 
-    public ListGamesResult listGames(ListGamesRequest req) {
+    public ListGamesResult listGames(ListGamesRequest req) throws ResponseException {
         String path = "/game";
         return this.makeRequest("GET", path, req, ListGamesResult.class);
     }
 
-    public CreateGameResult createGame(CreateGameRequest req) {
+    public CreateGameResult createGame(CreateGameRequest req) throws ResponseException {
         String path = "/game";
         return this.makeRequest("POST", path, req, CreateGameResult.class);
     }
 
-    public JoinGameResult joinGame(JoinGameRequest req) {
+    public JoinGameResult joinGame(JoinGameRequest req) throws ResponseException {
         String path = "/game";
         return this.makeRequest("PUT", path, req, JoinGameResult.class);
     }
