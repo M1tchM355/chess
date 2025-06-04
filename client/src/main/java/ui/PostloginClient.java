@@ -1,5 +1,6 @@
 package ui;
 
+import request.CreateGameRequest;
 import request.LogoutRequest;
 import result.LogoutResult;
 import server.ResponseException;
@@ -46,7 +47,13 @@ public class PostloginClient extends Client {
     }
 
     public String create(String... params) throws ResponseException {
-        return "";
+        if (params.length == 1) {
+            String name = params[0];
+            CreateGameRequest request = new CreateGameRequest(authToken,name);
+            this.server.createGame(request);
+            return "You created a new game called " + name + ".";
+        }
+        throw new ResponseException(400, "Expected create <NAME>");
     }
 
     public String list(String... params) throws ResponseException {
