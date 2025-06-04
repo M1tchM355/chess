@@ -31,4 +31,13 @@ public class PreloginClient extends Client {
                 help - see possible commands
                 """;
     }
+
+    public String login(String... params){
+
+        return "";
+    }
+
+    public String register(String... params){
+        return "";
+    }
 }
