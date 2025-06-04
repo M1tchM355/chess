@@ -10,9 +10,9 @@ public class Repl {
     private final Client activeClient;
 
     public Repl(String serverUrl) {
-        preloginClient = new PreloginClient(serverUrl, this);
-        postloginClient = new PostloginClient();
-        gameClient = new GameClient();
+        preloginClient = new PreloginClient(serverUrl);
+        postloginClient = new PostloginClient(serverUrl);
+        gameClient = new GameClient(serverUrl);
         activeClient = preloginClient;
     }
 
