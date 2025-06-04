@@ -1,7 +1,9 @@
 package ui;
 
 import request.LoginRequest;
+import request.RegisterRequest;
 import result.LoginResult;
+import result.RegisterResult;
 import server.ResponseException;
 
 import java.util.Arrays;
@@ -37,7 +39,7 @@ public class PreloginClient extends Client {
     }
 
     public String login(String... params) throws ResponseException {
-        if (params.length == 2){
+        if (params.length == 2) {
             String username = params[0];
             String password = params[1];
             LoginRequest request = new LoginRequest(username, password);
@@ -48,6 +50,14 @@ public class PreloginClient extends Client {
     }
 
     public String register(String... params) throws ResponseException {
-        return "";
+        if (params.length == 3) {
+            String username = params[0];
+            String password = params[1];
+            String email = params[2];
+            RegisterRequest request = new RegisterRequest(username, password, email);
+            RegisterResult result = this.server.register(request);
+            return "Welcome " + username + "! ";
+        }
+        throw new ResponseException(400, "Expected register <USERNAME> <PASSWORD> <EMAIL>");
     }
 }
