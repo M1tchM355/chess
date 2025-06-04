@@ -1,7 +1,10 @@
 package ui;
 
 import request.CreateGameRequest;
+import request.JoinGameRequest;
 import request.LogoutRequest;
+import result.CreateGameResult;
+import result.JoinGameResult;
 import result.LogoutResult;
 import server.ResponseException;
 
@@ -61,7 +64,14 @@ public class PostloginClient extends Client {
     }
 
     public String join(String... params) throws ResponseException {
-        return "";
+        if (params.length == 2) {
+            int ID = Integer.parseInt(params[0]);
+            String color = params[1];
+            JoinGameRequest request = new JoinGameRequest(color, ID, authToken);
+            this.server.joinGame(request);
+            return "You joined the game.";
+        }
+        throw new ResponseException(400, "Expected join <ID>");
     }
 
     public String observe(String... params) throws ResponseException {
