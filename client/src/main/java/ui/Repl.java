@@ -8,12 +8,16 @@ public class Repl {
     private final PostloginClient postloginClient;
     private final GameClient gameClient;
     private final Client activeClient;
+    private boolean loggedIn;
+    private boolean inGame;
 
     public Repl(String serverUrl) {
         preloginClient = new PreloginClient(serverUrl);
         postloginClient = new PostloginClient(serverUrl);
         gameClient = new GameClient(serverUrl);
         activeClient = preloginClient;
+        loggedIn = false;
+        inGame = false;
     }
 
     public void run() {
@@ -29,6 +33,10 @@ public class Repl {
             try {
                 result = activeClient.eval(line);
                 System.out.print(SET_TEXT_COLOR_BLUE + result);
+                String firstWord = result.split(" ")[0];
+                if (firstWord.equals("Welcome")) {
+                    loggedIn = true;
+                }
             } catch (Throwable e) {
                 var msg = e.toString();
                 System.out.print(msg);
@@ -38,7 +46,11 @@ public class Repl {
     }
 
     private void printPrompt() {
-        System.out.print("\n>>> " + SET_TEXT_COLOR_GREEN);
+        if (!loggedIn) {
+            System.out.print("\n NOT LOGGED IN >>> " + SET_TEXT_COLOR_GREEN);
+        } else {
+            System.out.print("\n LOGGED IN >>> " + SET_TEXT_COLOR_GREEN);
+        }
     }
 
 }
