@@ -1,5 +1,8 @@
 package ui;
 
+import request.LogoutRequest;
+import server.ResponseException;
+
 import java.util.Arrays;
 
 public class PostloginClient extends Client {
@@ -38,23 +41,24 @@ public class PostloginClient extends Client {
                 """;
     }
 
-    public String create(String... params) {
+    public String create(String... params) throws ResponseException {
         return "";
     }
 
-    public String list() {
+    public String list() throws ResponseException {
         return "";
     }
 
-    public String join(String... params) {
+    public String join(String... params) throws ResponseException {
         return "";
     }
 
-    public String observe(String... params) {
+    public String observe(String... params) throws ResponseException {
         return "";
     }
 
-    public String logout(String... params) {
-        return "";
+    public String logout() throws ResponseException {
+        LogoutRequest request = new LogoutRequest(null);
+        return "Bye!";
     }
 }

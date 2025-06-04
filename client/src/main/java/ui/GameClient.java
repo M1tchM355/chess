@@ -1,5 +1,7 @@
 package ui;
 
+import server.ResponseException;
+
 import java.util.Arrays;
 
 public class GameClient extends Client {
@@ -21,7 +23,7 @@ public class GameClient extends Client {
         }
     }
 
-    public String help(){
+    public String help() throws ResponseException {
         return """
                 quit - quit application
                 help - see possible commands

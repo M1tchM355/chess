@@ -44,6 +44,7 @@ public class PreloginClient extends Client {
             String password = params[1];
             LoginRequest request = new LoginRequest(username, password);
             LoginResult result = this.server.login(request);
+            this.authToken = result.authToken();
             return "Welcome " + username + "! ";
         }
         throw new ResponseException(400, "Expected login <USERNAME> <PASSWORD>");
@@ -56,6 +57,7 @@ public class PreloginClient extends Client {
             String email = params[2];
             RegisterRequest request = new RegisterRequest(username, password, email);
             RegisterResult result = this.server.register(request);
+            this.authToken = result.authToken();
             return "Welcome " + username + "! ";
         }
         throw new ResponseException(400, "Expected register <USERNAME> <PASSWORD> <EMAIL>");
