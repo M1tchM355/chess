@@ -3,8 +3,8 @@ package ui;
 import server.ServerFacade;
 
 public class Client {
-    private final ServerFacade server;
-    private final String serverUrl;
+    protected final ServerFacade server;
+    protected final String serverUrl;
 
     public Client(String serverUrl) {
         server = new ServerFacade(serverUrl);
