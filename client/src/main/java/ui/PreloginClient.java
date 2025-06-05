@@ -48,7 +48,7 @@ public class PreloginClient extends Client {
                 this.authToken = result.authToken();
                 return "Welcome " + username + "! ";
             } catch (Exception e) {
-                throw new ResponseException(500, "Error logging in");
+                throw new ResponseException(500, "Error logging in. Try again");
             }
         }
         throw new ResponseException(400, "Expected login <USERNAME> <PASSWORD>");
@@ -65,7 +65,7 @@ public class PreloginClient extends Client {
                 this.authToken = result.authToken();
                 return "Welcome " + username + "! ";
             } catch (Exception e) {
-                throw new ResponseException(500, "Couldn't register you");
+                throw new ResponseException(500, "Couldn't register you. Try logging in");
             }
         }
         throw new ResponseException(400, "Expected register <USERNAME> <PASSWORD> <EMAIL>");

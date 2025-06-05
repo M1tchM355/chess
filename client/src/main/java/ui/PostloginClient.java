@@ -115,7 +115,7 @@ public class PostloginClient extends Client {
                     return printGameBlack();
                 }
             } catch (Exception e) {
-                throw new ResponseException(500, "Couldn't join.");
+                throw new ResponseException(500, "Couldn't join. Someone may already have that spot.");
             }
         }
         throw new ResponseException(400, "Expected join <ID> [WHITE|BLACK]");
