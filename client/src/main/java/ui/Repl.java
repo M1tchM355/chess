@@ -50,7 +50,7 @@ public class Repl {
                 }
             } catch (Throwable e) {
                 var msg = e.toString();
-                System.out.print("Something went wrong");
+                System.out.print(msg);
             }
         }
         System.out.println();
