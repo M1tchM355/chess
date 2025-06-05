@@ -123,15 +123,19 @@ public class PostloginClient extends Client {
 
     public String observe(String... params) throws ResponseException {
         if (params.length == 1) {
-            if (gameMap.isEmpty()) {
-                throw new ResponseException(400, "You must first list the games");
+            try {
+                if (gameMap.isEmpty()) {
+                    throw new ResponseException(400, "You must first list the games");
+                }
+                int num = Integer.parseInt(params[0]);
+                Integer id = gameMap.get(num);
+                if (id == null) {
+                    throw new ResponseException(400, "Invalid ID");
+                }
+                return printGameWhite();
+            } catch (Exception e) {
+                throw new ResponseException(500, "Couldn't observe that game");
             }
-            int num = Integer.parseInt(params[0]);
-            Integer id = gameMap.get(num);
-            if (id == null) {
-                throw new ResponseException(400, "Invalid ID");
-            }
-            return printGameWhite();
         }
         throw new ResponseException(400, "Expected observe <ID>");
     }
@@ -179,32 +183,32 @@ public class PostloginClient extends Client {
 
     private String printGameBlack() {
         return
-                setBorder() + "    a  b  c  d  e  f  g  h    " + RESET_BG_COLOR +
-                        "\n" + setBorder() + " 8 " + setLightBG() + setWhite() + " R " + setDarkBG() + " N " + setLightBG() + " B " +
-                        setDarkBG() + " Q " + setLightBG() + " K " + setDarkBG() + " B " + setLightBG() + " N " +
-                        setDarkBG() + " R " + setBorder() + " 8 " + RESET_BG_COLOR +
-                        "\n" + setBorder() + " 7 " + setDarkBG() + setWhite() + " P " + setLightBG() + " P " + setDarkBG() + " P " +
+                setBorder() + "    h  g  f  e  d  c  b  a    " + RESET_BG_COLOR +
+                        "\n" + setBorder() + " 1 " + setLightBG() + setWhite() + " R " + setDarkBG() + " N " + setLightBG() + " B " +
+                        setDarkBG() + " K " + setLightBG() + " Q " + setDarkBG() + " B " + setLightBG() + " N " +
+                        setDarkBG() + " R " + setBorder() + " 1 " + RESET_BG_COLOR +
+                        "\n" + setBorder() + " 2 " + setDarkBG() + setWhite() + " P " + setLightBG() + " P " + setDarkBG() + " P " +
                         setLightBG() + " P " +setDarkBG() + " P " + setLightBG() + " P " +setDarkBG() + " P " +
-                        setLightBG() + " P " + setBorder() + " 7 " + RESET_BG_COLOR +
-                        "\n" + setBorder() + " 6 " + setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " +
+                        setLightBG() + " P " + setBorder() + " 2 " + RESET_BG_COLOR +
+                        "\n" + setBorder() + " 3 " + setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " +
                         setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " +
-                        setBorder() + " 6 " + RESET_BG_COLOR +
-                        "\n" + setBorder() + " 5 " + setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " +
-                        setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " +
-                        setBorder() + " 5 " + RESET_BG_COLOR +
-                        "\n" + setBorder() + " 4 " + setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " +
-                        setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " +
-                        setBorder() + " 4 " + RESET_BG_COLOR +
-                        "\n" + setBorder() + " 3 " + setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " +
-                        setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " +
                         setBorder() + " 3 " + RESET_BG_COLOR +
-                        "\n" + setBorder() + " 2 " + setLightBG() + setBlack() + " P " + setDarkBG() + " P " + setLightBG() + " P " +
+                        "\n" + setBorder() + " 4 " + setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " +
+                        setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " +
+                        setBorder() + " 4 " + RESET_BG_COLOR +
+                        "\n" + setBorder() + " 5 " + setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " +
+                        setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " +
+                        setBorder() + " 5 " + RESET_BG_COLOR +
+                        "\n" + setBorder() + " 6 " + setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " +
+                        setDarkBG() + "   " + setLightBG() + "   " + setDarkBG() + "   " + setLightBG() + "   " +
+                        setBorder() + " 6 " + RESET_BG_COLOR +
+                        "\n" + setBorder() + " 7 " + setLightBG() + setBlack() + " P " + setDarkBG() + " P " + setLightBG() + " P " +
                         setDarkBG() + " P " + setLightBG() + " P " +setDarkBG() + " P " + setLightBG() + " P " +
-                        setDarkBG() + " P " + setBorder() + " 2 " + RESET_BG_COLOR +
-                        "\n" + setBorder() + " 1 " + setDarkBG() + setBlack() + " R " + setLightBG() + " N " + setDarkBG() + " B " +
-                        setLightBG() + " Q " + setDarkBG() + " K " + setLightBG() + " B " + setDarkBG() + " N " +
-                        setLightBG() + " R " + setBorder() + " 1 " + RESET_BG_COLOR +
-                        "\n" + setBorder() + "    a  b  c  d  e  f  g  h    " + RESET_BG_COLOR + RESET_TEXT_COLOR;
+                        setDarkBG() + " P " + setBorder() + " 7 " + RESET_BG_COLOR +
+                        "\n" + setBorder() + " 8 " + setDarkBG() + setBlack() + " R " + setLightBG() + " N " + setDarkBG() + " B " +
+                        setLightBG() + " K " + setDarkBG() + " Q " + setLightBG() + " B " + setDarkBG() + " N " +
+                        setLightBG() + " R " + setBorder() + " 8 " + RESET_BG_COLOR +
+                        "\n" + setBorder() + "    h  g  f  e  d  c  b  a    " + RESET_BG_COLOR + RESET_TEXT_COLOR;
     }
 
     private String setLightBG() {
