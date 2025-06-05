@@ -77,10 +77,11 @@ public class PostloginClient extends Client {
         int counter = 1;
         for (GameData game : games) {
             gameMap.put(counter, game.gameID());
-            ret.append(counter)
+            ret.append("\n").append(counter)
                     .append("\nName: ").append(game.gameName())
                     .append("\nWhite player: ").append(game.whiteUsername())
                     .append("\nBlack player: ").append(game.blackUsername());
+            counter++;
         }
         return ret.toString();
     }
@@ -104,7 +105,7 @@ public class PostloginClient extends Client {
                 return printGameBlack();
             }
         }
-        throw new ResponseException(400, "Expected join <ID>");
+        throw new ResponseException(400, "Expected join <ID> [WHITE|BLACK]");
     }
 
     public String observe(String... params) throws ResponseException {
@@ -148,7 +149,7 @@ public class PostloginClient extends Client {
                         "\n 1 " + setDarkBG() + setWhite() + " R " + setLightBG() + " N " + setDarkBG() + " B " +
                         setLightBG() + " Q " + setDarkBG() + " K " + setLightBG() + " B " + setDarkBG() + " N " +
                         setLightBG() + " R " + setBorder() + " 1 " +
-                        "\n    a  b  c  d  e  f  g  h    ";
+                        "\n    a  b  c  d  e  f  g  h    " + RESET_BG_COLOR + RESET_TEXT_COLOR;
     }
 
     private String printGameBlack() {
@@ -178,7 +179,7 @@ public class PostloginClient extends Client {
                         "\n 1 " + setDarkBG() + setBlack() + " R " + setLightBG() + " N " + setDarkBG() + " B " +
                         setLightBG() + " Q " + setDarkBG() + " K " + setLightBG() + " B " + setDarkBG() + " N " +
                         setLightBG() + " R " + setBorder() + " 1 " +
-                        "\n    a  b  c  d  e  f  g  h    ";
+                        "\n    a  b  c  d  e  f  g  h    " + RESET_BG_COLOR + RESET_TEXT_COLOR;
     }
 
     private String setLightBG() {
