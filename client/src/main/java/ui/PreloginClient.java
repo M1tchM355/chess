@@ -40,25 +40,33 @@ public class PreloginClient extends Client {
 
     public String login(String... params) throws ResponseException {
         if (params.length == 2) {
-            String username = params[0];
-            String password = params[1];
-            LoginRequest request = new LoginRequest(username, password);
-            LoginResult result = this.server.login(request);
-            this.authToken = result.authToken();
-            return "Welcome " + username + "! ";
+            try {
+                String username = params[0];
+                String password = params[1];
+                LoginRequest request = new LoginRequest(username, password);
+                LoginResult result = this.server.login(request);
+                this.authToken = result.authToken();
+                return "Welcome " + username + "! ";
+            } catch (Exception e) {
+                throw new ResponseException(500, "Error logging in");
+            }
         }
         throw new ResponseException(400, "Expected login <USERNAME> <PASSWORD>");
     }
 
     public String register(String... params) throws ResponseException {
         if (params.length == 3) {
-            String username = params[0];
-            String password = params[1];
-            String email = params[2];
-            RegisterRequest request = new RegisterRequest(username, password, email);
-            RegisterResult result = this.server.register(request);
-            this.authToken = result.authToken();
-            return "Welcome " + username + "! ";
+            try {
+                String username = params[0];
+                String password = params[1];
+                String email = params[2];
+                RegisterRequest request = new RegisterRequest(username, password, email);
+                RegisterResult result = this.server.register(request);
+                this.authToken = result.authToken();
+                return "Welcome " + username + "! ";
+            } catch (Exception e) {
+                throw new ResponseException(500, "Couldn't register you");
+            }
         }
         throw new ResponseException(400, "Expected register <USERNAME> <PASSWORD> <EMAIL>");
     }

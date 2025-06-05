@@ -61,33 +61,68 @@ public class PostloginClient extends Client {
 
     public String create(String... params) throws ResponseException {
         if (params.length == 1) {
-            String name = params[0];
-            CreateGameRequest request = new CreateGameRequest(authToken,name);
-            this.server.createGame(request);
-            return "You created a new game called " + name + ".";
+            try {
+                String name = params[0];
+                CreateGameRequest request = new CreateGameRequest(authToken, name);
+                this.server.createGame(request);
+                return "You created a new game called " + name + ".";
+            } catch (Exception e) {
+                throw new ResponseException(500, "Couldn't create the game");
+            }
         }
         throw new ResponseException(400, "Expected create <NAME>");
     }
 
     public String list(String... params) throws ResponseException {
-        ListGamesRequest request = new ListGamesRequest(authToken);
-        ListGamesResult result = this.server.listGames(request);
-        Collection<GameData> games = result.games();
-        StringBuilder ret = new StringBuilder();
-        int counter = 1;
-        for (GameData game : games) {
-            gameMap.put(counter, game.gameID());
-            ret.append("\n").append(counter)
-                    .append("\nName: ").append(game.gameName())
-                    .append("\nWhite player: ").append(game.whiteUsername())
-                    .append("\nBlack player: ").append(game.blackUsername());
-            counter++;
+        try {
+            ListGamesRequest request = new ListGamesRequest(authToken);
+            ListGamesResult result = this.server.listGames(request);
+            Collection<GameData> games = result.games();
+            StringBuilder ret = new StringBuilder();
+            int counter = 1;
+            for (GameData game : games) {
+                gameMap.put(counter, game.gameID());
+                ret.append("\n").append(counter)
+                        .append("\nName: ").append(game.gameName())
+                        .append("\nWhite player: ").append(game.whiteUsername())
+                        .append("\nBlack player: ").append(game.blackUsername());
+                counter++;
+            }
+
+            return ret.toString();
+        } catch (Exception e) {
+            throw new ResponseException(500, "Couldn't list the games");
         }
-        return ret.toString();
     }
 
     public String join(String... params) throws ResponseException {
         if (params.length == 2) {
+            try {
+                if (gameMap.isEmpty()) {
+                    throw new ResponseException(400, "You must first list the games");
+                }
+                int num = Integer.parseInt(params[0]);
+                Integer id = gameMap.get(num);
+                if (id == null) {
+                    throw new ResponseException(400, "Invalid ID");
+                }
+                String color = params[1].toUpperCase();
+                JoinGameRequest request = new JoinGameRequest(color, id, authToken);
+                this.server.joinGame(request);
+                if (color.equals("WHITE")) {
+                    return printGameWhite();
+                } else {
+                    return printGameBlack();
+                }
+            } catch (Exception e) {
+                throw new ResponseException(500, "Couldn't join.");
+            }
+        }
+        throw new ResponseException(400, "Expected join <ID> [WHITE|BLACK]");
+    }
+
+    public String observe(String... params) throws ResponseException {
+        if (params.length == 1) {
             if (gameMap.isEmpty()) {
                 throw new ResponseException(400, "You must first list the games");
             }
@@ -96,30 +131,20 @@ public class PostloginClient extends Client {
             if (id == null) {
                 throw new ResponseException(400, "Invalid ID");
             }
-            String color = params[1].toUpperCase();
-            JoinGameRequest request = new JoinGameRequest(color, id, authToken);
-            this.server.joinGame(request);
-            if (color.equals("WHITE")) {
-                return printGameWhite();
-            } else {
-                return printGameBlack();
-            }
-        }
-        throw new ResponseException(400, "Expected join <ID> [WHITE|BLACK]");
-    }
-
-    public String observe(String... params) throws ResponseException {
-        if (params.length == 1) {
             return printGameWhite();
         }
         throw new ResponseException(400, "Expected observe <ID>");
     }
 
     public String logout(String... params) throws ResponseException {
-        LogoutRequest request = new LogoutRequest(this.authToken);
-        LogoutResult result = this.server.logout(request);
-        authToken = null;
-        return "Bye!";
+        try {
+            LogoutRequest request = new LogoutRequest(this.authToken);
+            LogoutResult result = this.server.logout(request);
+            authToken = null;
+            return "Bye!";
+        } catch (Exception e) {
+            throw new ResponseException(500, "Couldn't log you out");
+        }
     }
 
     private String printGameWhite() {
