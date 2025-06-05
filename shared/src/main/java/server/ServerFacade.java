@@ -59,7 +59,9 @@ public class ServerFacade {
             if (authToken != null) {
                 http.addRequestProperty("authorization", authToken);
             }
-            writeBody(request, http);
+            if (!http.getRequestMethod().equals("GET")) {
+                writeBody(request, http);
+            }
 
             http.connect();
             throwIfNotSuccessful(http);
