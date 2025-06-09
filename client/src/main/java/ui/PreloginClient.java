@@ -22,6 +22,7 @@ public class PreloginClient extends Client {
             return switch (cmd) {
                 case "login" -> login(params);
                 case "register" -> register(params);
+                case "quit" -> quit();
                 default -> help();
             };
         } catch (ResponseException ex) {
@@ -69,5 +70,9 @@ public class PreloginClient extends Client {
             }
         }
         throw new ResponseException(400, "Expected register <USERNAME> <PASSWORD> <EMAIL>");
+    }
+
+    public String quit() {
+        return "quit";
     }
 }

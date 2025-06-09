@@ -40,6 +40,7 @@ public class PostloginClient extends Client {
                 case "join" -> join(params);
                 case "observe" -> observe(params);
                 case "logout" -> logout(params);
+                case "quit" -> quit();
                 default -> help();
             };
         } catch (ResponseException ex) {
@@ -149,6 +150,10 @@ public class PostloginClient extends Client {
         } catch (Exception e) {
             throw new ResponseException(500, "Couldn't log you out");
         }
+    }
+
+    public String quit() {
+        return "quit";
     }
 
     private String printGameWhite() {
