@@ -8,18 +8,18 @@ public class Repl {
     private final PostloginClient postloginClient;
     private final GameClient gameClient;
     private Client activeClient;
-    private boolean loggedIn;
     private boolean inGame;
     private String authToken;
+    private String user;
 
     public Repl(String serverUrl) {
         preloginClient = new PreloginClient(serverUrl);
         postloginClient = new PostloginClient(serverUrl);
         gameClient = new GameClient(serverUrl);
         activeClient = preloginClient;
-        loggedIn = false;
         inGame = false;
         authToken = null;
+        user = "NOT LOGGED IN";
     }
 
     public void run() {
@@ -35,15 +35,16 @@ public class Repl {
             try {
                 result = activeClient.eval(line);
                 System.out.print(SET_TEXT_COLOR_BLUE + result);
-                String firstWord = result.split(" ")[0];
+                String[] words = result.split(" ");
+                String firstWord = words[0];
                 authToken = activeClient.getAuthToken();
                 if (firstWord.equals("Welcome")) {
-                    loggedIn = true;
+                    user = words[1];
                     activeClient = postloginClient;
                     postloginClient.setAuthToken(authToken);
                     gameClient.setAuthToken(authToken);
                 } else if (firstWord.equals("Bye!")) {
-                    loggedIn = false;
+                    user = "NOT LOGGED IN";
                     activeClient = preloginClient;
                     postloginClient.setAuthToken(null);
                     gameClient.setAuthToken(null);
@@ -57,11 +58,7 @@ public class Repl {
     }
 
     private void printPrompt() {
-        if (!loggedIn) {
-            System.out.print(SET_TEXT_COLOR_LIGHT_GREY + "\n NOT LOGGED IN >>> " + SET_TEXT_COLOR_GREEN);
-        } else {
-            System.out.print(SET_TEXT_COLOR_LIGHT_GREY + "\n LOGGED IN >>> " + SET_TEXT_COLOR_GREEN);
-        }
+        System.out.print(SET_TEXT_COLOR_LIGHT_GREY + "\n " + user + " >>> " + SET_TEXT_COLOR_GREEN);
     }
 
 }

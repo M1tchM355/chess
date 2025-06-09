@@ -46,7 +46,7 @@ public class PreloginClient extends Client {
                 LoginRequest request = new LoginRequest(username, password);
                 LoginResult result = this.server.login(request);
                 this.authToken = result.authToken();
-                return "Welcome " + username + "! ";
+                return "Welcome " + username;
             } catch (Exception e) {
                 throw new ResponseException(500, "Error logging in. Try again");
             }
