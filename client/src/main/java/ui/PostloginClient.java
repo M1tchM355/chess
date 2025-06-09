@@ -110,9 +110,9 @@ public class PostloginClient extends Client {
                 JoinGameRequest request = new JoinGameRequest(color, id, authToken);
                 this.server.joinGame(request);
                 if (color.equals("WHITE")) {
-                    return printGameWhite();
+                    return "Joined game " + id + printGameWhite();
                 } else {
-                    return printGameBlack();
+                    return "Joined game " + id + printGameBlack();
                 }
             } catch (Exception e) {
                 throw new ResponseException(500, "Couldn't join. Someone may already have that spot.");
@@ -132,7 +132,7 @@ public class PostloginClient extends Client {
                 if (id == null) {
                     throw new ResponseException(400, "Invalid ID");
                 }
-                return printGameWhite();
+                return "Observing game " + id + printGameWhite();
             } catch (Exception e) {
                 throw new ResponseException(500, "Couldn't observe that game");
             }
@@ -153,7 +153,7 @@ public class PostloginClient extends Client {
 
     private String printGameWhite() {
         return
-                setBorder() + "    a  b  c  d  e  f  g  h    " + RESET_BG_COLOR +
+                "\n" + setBorder() + "    a  b  c  d  e  f  g  h    " + RESET_BG_COLOR +
                         "\n" + setBorder() + " 8 " + setLightBG() + setBlack() + " R " + setDarkBG() + " N " + setLightBG() + " B " +
                         setDarkBG() + " Q " + setLightBG() + " K " + setDarkBG() + " B " + setLightBG() + " N " +
                         setDarkBG() + " R " + setBorder() + " 8 " + RESET_BG_COLOR +
@@ -183,7 +183,7 @@ public class PostloginClient extends Client {
 
     private String printGameBlack() {
         return
-                setBorder() + "    h  g  f  e  d  c  b  a    " + RESET_BG_COLOR +
+                "\n" + setBorder() + "    h  g  f  e  d  c  b  a    " + RESET_BG_COLOR +
                         "\n" + setBorder() + " 1 " + setLightBG() + setWhite() + " R " + setDarkBG() + " N " + setLightBG() + " B " +
                         setDarkBG() + " K " + setLightBG() + " Q " + setDarkBG() + " B " + setLightBG() + " N " +
                         setDarkBG() + " R " + setBorder() + " 1 " + RESET_BG_COLOR +

@@ -48,6 +48,10 @@ public class Repl {
                     activeClient = preloginClient;
                     postloginClient.setAuthToken(null);
                     gameClient.setAuthToken(null);
+                } else if (firstWord.equals("Observing")) {
+
+                } else if (firstWord.equals("Joined")) {
+                    activeClient = gameClient;
                 }
             } catch (Throwable e) {
                 var msg = e.toString();
