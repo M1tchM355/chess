@@ -1,14 +1,16 @@
 package ui;
 
+import websocket.ServerMessageObserver;
+import websocket.messages.ServerMessage;
+
 import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
-public class Repl {
+public class Repl implements ServerMessageObserver {
     private final PreloginClient preloginClient;
     private final PostloginClient postloginClient;
     private final GameClient gameClient;
     private Client activeClient;
-    private boolean inGame;
     private String authToken;
     private String user;
 
@@ -17,7 +19,6 @@ public class Repl {
         postloginClient = new PostloginClient(serverUrl);
         gameClient = new GameClient(serverUrl);
         activeClient = preloginClient;
-        inGame = false;
         authToken = null;
         user = "NOT LOGGED IN";
     }
@@ -52,6 +53,8 @@ public class Repl {
 
                 } else if (firstWord.equals("Joined")) {
                     activeClient = gameClient;
+                } else if (firstWord.equals("Left")) {
+                    activeClient = postloginClient;
                 }
             } catch (Throwable e) {
                 var msg = e.toString();
@@ -61,8 +64,13 @@ public class Repl {
         System.out.println();
     }
 
+    @Override
+    public void notify(ServerMessage message) {
+
+    }
+
     private void printPrompt() {
-        System.out.print(SET_TEXT_COLOR_LIGHT_GREY + "\n " + user + " >>> " + SET_TEXT_COLOR_GREEN);
+        System.out.print(RESET_TEXT_COLOR + "\n " + user + " >>> " + SET_TEXT_COLOR_GREEN);
     }
 
 }
