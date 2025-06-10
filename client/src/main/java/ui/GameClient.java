@@ -56,6 +56,10 @@ public class GameClient extends Client {
         return "Left game";
     }
 
+    public void connect() throws ResponseException {
+        ws.connect(authToken, gameID, role);
+    }
+
     public String draw() {
         return null;
     }

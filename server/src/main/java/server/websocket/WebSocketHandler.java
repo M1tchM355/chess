@@ -1,6 +1,10 @@
 package server.websocket;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
+import dataaccess.*;
+import model.AuthData;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -13,8 +17,12 @@ import java.io.IOException;
 
 @WebSocket
 public class WebSocketHandler {
-
+    DAORecord daoRecord;
     private final ConnectionManager connections = new ConnectionManager();
+
+    public WebSocketHandler(DAORecord daoRecord) {
+        this.daoRecord = daoRecord;
+    }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) {
@@ -36,7 +44,10 @@ public class WebSocketHandler {
         }
     }
 
-    private void connect(Session session, String username, ConnectCommand cmd) throws IOException {
+    private void connect(Session session, String username, ConnectCommand cmd) throws IOException, DataAccessException {
+        String game = new Gson().toJson(daoRecord.gameDAO().getGame(cmd.getGameID()).game());
+        session.getRemote().sendString(game);
+
         String message = String.format("%s joined the game as " + cmd.getRole(), username);
         NotificationMessage notification = new NotificationMessage(message);
         connections.broadcast(username, notification);
@@ -56,7 +67,7 @@ public class WebSocketHandler {
 
     }
 
-    private String getUsername(String authToken) {
-        return null;
+    private String getUsername(String authToken) throws DataAccessException {
+        return daoRecord.authDAO().getAuth(authToken).username();
     }
 }

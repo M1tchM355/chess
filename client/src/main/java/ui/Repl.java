@@ -1,5 +1,7 @@
 package ui;
 
+import chess.ChessGame;
+import com.google.gson.Gson;
 import websocket.ServerMessageObserver;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
@@ -53,9 +55,15 @@ public class Repl implements ServerMessageObserver {
                     postloginClient.setAuthToken(null);
                     gameClient.setAuthToken(null);
                 } else if (firstWord.equals("Observing")) {
-
+                    activeClient = gameClient;
+                    gameClient.setGameID(postloginClient.getGameID());
+                    gameClient.setRole(postloginClient.getRole());
+                    gameClient.connect();
                 } else if (firstWord.equals("Joined")) {
                     activeClient = gameClient;
+                    gameClient.setGameID(postloginClient.getGameID());
+                    gameClient.setRole(postloginClient.getRole());
+                    gameClient.connect();
                 } else if (firstWord.equals("Left")) {
                     activeClient = postloginClient;
                 }
@@ -85,7 +93,8 @@ public class Repl implements ServerMessageObserver {
     }
 
     private void loadGame(String message) {
-
+        gameClient.currentGame = new Gson().fromJson(message, ChessGame.class);
+        System.out.println(gameClient.draw());
     }
 
     private void printPrompt() {
