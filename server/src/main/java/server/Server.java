@@ -2,6 +2,7 @@ package server;
 
 import dataaccess.*;
 import handlers.*;
+import server.websocket.WebSocketHandler;
 import spark.*;
 
 public class Server {
@@ -21,13 +22,14 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
-        Spark.post("/user",this::register);
-        Spark.post("/session",this::login);
-        Spark.delete("/db",this::clear);
-        Spark.delete("/session",this::logout);
-        Spark.get("/game",this::listGames);
-        Spark.post("/game",this::createGame);
-        Spark.put("/game",this::joinGame);
+        Spark.webSocket("/ws", WebSocketHandler.class);
+        Spark.post("/user", this::register);
+        Spark.post("/session", this::login);
+        Spark.delete("/db", this::clear);
+        Spark.delete("/session", this::logout);
+        Spark.get("/game", this::listGames);
+        Spark.post("/game", this::createGame);
+        Spark.put("/game", this::joinGame);
 
         Spark.awaitInitialization();
         return Spark.port();
