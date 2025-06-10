@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import server.ServerFacade;
 
 public class Client {
@@ -7,6 +8,8 @@ public class Client {
     protected final String serverUrl;
     protected String authToken;
     protected Integer gameID;
+    protected ChessGame currentGame;
+    protected String role;
 
     public Client(String serverUrl) {
         server = new ServerFacade(serverUrl);
@@ -30,5 +33,21 @@ public class Client {
 
     public void setGameID(Integer gameID) {
         this.gameID = gameID;
+    }
+
+    public ChessGame getCurrentGame() {
+        return currentGame;
+    }
+
+    public void setCurrentGame(ChessGame currentGame) {
+        this.currentGame = currentGame;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
