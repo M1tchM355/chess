@@ -36,14 +36,16 @@ public class WebSocketHandler {
         }
     }
 
-    private void connect(Session session, String username, ConnectCommand cmd) throws Exception {
+    private void connect(Session session, String username, ConnectCommand cmd) throws IOException {
         String message = String.format("%s joined the game as " + cmd.getRole(), username);
         NotificationMessage notification = new NotificationMessage(message);
         connections.broadcast(username, notification);
     }
 
-    private void makeMove(Session session, String username, MakeMoveCommand cmd) {
-        String message = String.format("%s made a move: ")
+    private void makeMove(Session session, String username, MakeMoveCommand cmd) throws IOException {
+        String message = String.format("%s made a move: " + cmd.getMove(), username);
+        NotificationMessage notification = new NotificationMessage(message);
+        connections.broadcast(username, notification);
     }
 
     private void leave(Session session, String username, LeaveCommand cmd) {
