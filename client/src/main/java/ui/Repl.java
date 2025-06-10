@@ -1,6 +1,9 @@
 package ui;
 
 import websocket.ServerMessageObserver;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.util.Scanner;
@@ -66,8 +69,23 @@ public class Repl implements ServerMessageObserver {
 
     @Override
     public void notify(ServerMessage message) {
-        System.out.println(SET_TEXT_COLOR_RED + message);
-        printPrompt();
+        switch (message.getServerMessageType()) {
+            case NOTIFICATION -> displayNotification(((NotificationMessage) message).getMessage());
+            case ERROR -> displayError(((ErrorMessage) message).getMessage());
+            case LOAD_GAME -> loadGame(((LoadGameMessage) message).getMessage());
+        }
+    }
+
+    private void displayNotification(String message) {
+
+    }
+
+    private void displayError(String message) {
+
+    }
+
+    private void loadGame(String message) {
+
     }
 
     private void printPrompt() {
