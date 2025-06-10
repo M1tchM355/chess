@@ -110,9 +110,12 @@ public class PostloginClient extends Client {
                 String color = params[1].toUpperCase();
                 JoinGameRequest request = new JoinGameRequest(color, id, authToken);
                 this.server.joinGame(request);
+                gameID = id;
                 if (color.equals("WHITE")) {
+                    role = "WHITE";
                     return "Joined game " + id + printGameWhite();
                 } else {
+                    role = "BLACK";
                     return "Joined game " + id + printGameBlack();
                 }
             } catch (Exception e) {
@@ -133,6 +136,8 @@ public class PostloginClient extends Client {
                 if (id == null) {
                     throw new ResponseException(400, "Invalid ID");
                 }
+                gameID = id;
+                role = "an observer";
                 return "Observing game " + id + printGameWhite();
             } catch (Exception e) {
                 throw new ResponseException(500, "Couldn't observe that game");
