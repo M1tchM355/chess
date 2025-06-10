@@ -6,6 +6,7 @@ public class Client {
     protected final ServerFacade server;
     protected final String serverUrl;
     protected String authToken;
+    protected Integer gameID;
 
     public Client(String serverUrl) {
         server = new ServerFacade(serverUrl);
@@ -22,4 +23,12 @@ public class Client {
     }
 
     public void setAuthToken(String authToken) { this.authToken = authToken; }
+
+    public Integer getGameID() {
+        return gameID;
+    }
+
+    public void setGameID(Integer gameID) {
+        this.gameID = gameID;
+    }
 }
