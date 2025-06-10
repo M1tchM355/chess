@@ -1,20 +1,28 @@
 package ui;
 
 import chess.ChessGame;
+import request.JoinGameRequest;
 import server.ResponseException;
+import websocket.ServerMessageObserver;
+import websocket.WebsocketFacade;
 
 import java.util.Arrays;
 
 import static ui.EscapeSequences.*;
 
 public class GameClient extends Client {
-    public GameClient(String serverURL){
+    private final ServerMessageObserver observer;
+    private WebsocketFacade ws;
+
+    public GameClient(String serverURL, ServerMessageObserver observer) {
         super(serverURL);
+        this.observer = observer;
     }
 
     @Override
     public String eval(String input) {
         try {
+            ws = new WebsocketFacade(serverUrl, observer);
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);

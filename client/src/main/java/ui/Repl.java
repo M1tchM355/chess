@@ -17,7 +17,7 @@ public class Repl implements ServerMessageObserver {
     public Repl(String serverUrl) {
         preloginClient = new PreloginClient(serverUrl);
         postloginClient = new PostloginClient(serverUrl);
-        gameClient = new GameClient(serverUrl);
+        gameClient = new GameClient(serverUrl, this);
         activeClient = preloginClient;
         authToken = null;
         user = "NOT LOGGED IN";
@@ -66,7 +66,8 @@ public class Repl implements ServerMessageObserver {
 
     @Override
     public void notify(ServerMessage message) {
-
+        System.out.println(SET_TEXT_COLOR_RED + message);
+        printPrompt();
     }
 
     private void printPrompt() {
