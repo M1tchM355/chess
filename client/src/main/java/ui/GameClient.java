@@ -59,7 +59,7 @@ public class GameClient extends Client {
 
     public void connect() throws ResponseException {
         ws = new WebsocketFacade(serverUrl, observer);
-        ws.connect(authToken, gameID, role);
+        ws.connect(authToken, gameID);
     }
 
     public String draw() {
@@ -90,33 +90,38 @@ public class GameClient extends Client {
     }
 
     private String printGame(String color) {
-        int start;
-        int finish;
-        int add;
         StringBuilder res = new StringBuilder("\n" + setBorder());
         if (color.equals("white")) {
-            start = 8;
-            finish = 1;
-            add = -1;
-            res.append("    a  b  c  d  e  f  g  h    " + RESET_BG_COLOR);
-        } else {
-            start = 1;
-            finish = 8;
-            add = 1;
-            res.append("    h  g  f  e  d  c  b  a    " + RESET_BG_COLOR);
-        }
-        for (int i = start; i >= finish; i += add) {
-            res.append("\n").append(setBorder()).append(" ").append(i).append(" ").append(setLightBG())
-                    .append(getPiece(i, 1)).append(setDarkBG()).append(getPiece(i, 2)).append(setLightBG())
-                    .append(getPiece(i, 3)).append(setDarkBG()).append(getPiece(i, 4)).append(setLightBG())
-                    .append(getPiece(i, 5)).append(setDarkBG()).append(getPiece(i, 6)).append(setLightBG())
-                    .append(getPiece(i, 7)).append(setDarkBG()).append(getPiece(i, 8)).append(setBorder())
-                    .append(" ").append(i).append(" ").append(RESET_BG_COLOR);
-        }
-        res.append("\n").append(setBorder());
-        if (color.equals("white")) {
+            res.append("    a  b  c  d  e  f  g  h    ").append(RESET_BG_COLOR);
+            for (int i = 8; i >= 1; i--) {
+                res.append("\n").append(setBorder()).append(" ").append(i).append(" ");
+
+                boolean isLight = (i % 2 == 0);
+                for (int j = 1; j <= 8; j++) {
+                    res.append(isLight ? setLightBG() : setDarkBG());
+                    res.append(getPiece(i, j));
+                    isLight = !isLight;
+                }
+
+                res.append(setBorder()).append(" ").append(i).append(" ").append(RESET_BG_COLOR);
+            }
+            res.append("\n").append(setBorder());
             res.append("    a  b  c  d  e  f  g  h    ");
         } else {
+            res.append("    h  g  f  e  d  c  b  a    " + RESET_BG_COLOR);
+            for (int i = 1; i <= 8; i++) {
+                res.append("\n").append(setBorder()).append(" ").append(i).append(" ");
+
+                boolean isLight = (i % 2 == 0);
+                for (int j = 1; j <= 8; j++) {
+                    res.append(isLight ? setLightBG() : setDarkBG());
+                    res.append(getPiece(i, j));
+                    isLight = !isLight;
+                }
+
+                res.append(setBorder()).append(" ").append(i).append(" ").append(RESET_BG_COLOR);
+            }
+            res.append("\n").append(setBorder());
             res.append("\n").append(setBorder()).append("    h  g  f  e  d  c  b  a    ");
         }
         res.append(RESET_BG_COLOR).append(RESET_TEXT_COLOR);
@@ -126,6 +131,9 @@ public class GameClient extends Client {
     private String getPiece(int row, int col) {
         String res;
         ChessPiece piece = currentGame.getBoard().getPiece(new ChessPosition(row, col));
+        if (piece == null) {
+            return "   ";
+        }
         if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
             res = setWhite();
         } else {

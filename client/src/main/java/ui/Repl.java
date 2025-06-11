@@ -63,7 +63,10 @@ public class Repl implements ServerMessageObserver {
                         gameClient.setRole(postloginClient.getRole());
                         gameClient.connect();
                     }
-                    case "Left" -> activeClient = postloginClient;
+                    case "Left" -> {
+                        activeClient = postloginClient;
+                        gameClient.leave();
+                    }
                 }
                 result = "";
             } catch (Throwable e) {
@@ -75,11 +78,12 @@ public class Repl implements ServerMessageObserver {
     }
 
     @Override
-    public void notify(ServerMessage message) {
-        switch (message.getServerMessageType()) {
-            case NOTIFICATION -> displayNotification(((NotificationMessage) message).getMessage());
-            case ERROR -> displayError(((ErrorMessage) message).getErrorMessage());
-            case LOAD_GAME -> loadGame(((LoadGameMessage) message).getGame());
+    public void notify(String message) {
+        ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+        switch (serverMessage.getServerMessageType()) {
+            case NOTIFICATION -> displayNotification(new Gson().fromJson(message, NotificationMessage.class).getMessage());
+            case ERROR -> displayError(new Gson().fromJson(message, ErrorMessage.class).getErrorMessage());
+            case LOAD_GAME -> loadGame(new Gson().fromJson(message, LoadGameMessage.class).getGame());
         }
     }
 
@@ -94,6 +98,7 @@ public class Repl implements ServerMessageObserver {
     private void loadGame(String message) {
         gameClient.currentGame = new Gson().fromJson(message, ChessGame.class);
         System.out.println(gameClient.draw());
+        printPrompt();
     }
 
     private void printPrompt() {

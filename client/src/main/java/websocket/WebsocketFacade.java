@@ -26,8 +26,7 @@ public class WebsocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
-                    observer.notify(serverMessage);
+                    observer.notify(message);
                 }
             });
         } catch (Exception e) {
@@ -35,7 +34,7 @@ public class WebsocketFacade extends Endpoint {
         }
     }
 
-    public void connect(String authToken, Integer gameID, String role) throws ResponseException {
+    public void connect(String authToken, Integer gameID) throws ResponseException {
         try {
             var command = new ConnectCommand(authToken, gameID);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
