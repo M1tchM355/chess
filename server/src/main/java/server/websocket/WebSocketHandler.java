@@ -81,8 +81,11 @@ public class WebSocketHandler {
         }
     }
 
-    private void leave(Session session, String username, LeaveCommand cmd) {
+    private void leave(Session session, String username, LeaveCommand cmd) throws IOException, DataAccessException {
+        int gameID = cmd.getGameID();
+        removePlayer(username, gameID);
 
+        sendNotification(username + "left the game", username);
     }
 
     private void resign(Session session, String username, ResignCommand cmd) {
@@ -140,6 +143,16 @@ public class WebSocketHandler {
             sendNotification(turn.name() + "is in check", null);
         } else if (isInStalemate) {
             sendNotification("stalemate", null);
+        }
+    }
+
+    private void removePlayer(String username, int gameID) throws DataAccessException {
+        GameDAO gameDAO = daoRecord.gameDAO();
+        String role = getRole(username, gameID);
+        if (role.equals("white")) {
+            gameDAO.updateGame(gameID, "WHITE", null);
+        } else if (role.equals("black")) {
+            gameDAO.updateGame(gameID, "BLACK", null);
         }
     }
 }
