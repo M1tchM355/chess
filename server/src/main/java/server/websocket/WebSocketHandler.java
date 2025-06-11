@@ -54,15 +54,15 @@ public class WebSocketHandler {
         String game = new Gson().toJson(loadGame);
         session.getRemote().sendString(game);
 
-        String message = String.format("%s joined the game as ", username);
+        String message = String.format("%s joined the game as " + getRole(username, cmd.getGameID()), username);
         NotificationMessage notification = new NotificationMessage(message);
-        connections.broadcast(username, notification);
+        connections.broadcastNotification(username, new Gson().toJson(notification));
     }
 
     private void makeMove(Session session, String username, MakeMoveCommand cmd) throws IOException {
         String message = String.format("%s made a move: " + cmd.getMove(), username);
         NotificationMessage notification = new NotificationMessage(message);
-        connections.broadcast(username, notification);
+        connections.broadcastNotification(username, new Gson().toJson(notification));
     }
 
     private void leave(Session session, String username, LeaveCommand cmd) {
@@ -75,5 +75,16 @@ public class WebSocketHandler {
 
     private String getUsername(String authToken) throws DataAccessException {
         return daoRecord.authDAO().getAuth(authToken).username();
+    }
+
+    private String getRole(String username, int gameID) throws DataAccessException {
+        String whiteUser = daoRecord.gameDAO().getGame(gameID).whiteUsername();
+        String blackUser = daoRecord.gameDAO().getGame(gameID).blackUsername();
+        if (username.equals(whiteUser)) {
+            return "white";
+        } else if (username.equals(blackUser)) {
+            return "black";
+        }
+        return "an observer";
     }
 }
