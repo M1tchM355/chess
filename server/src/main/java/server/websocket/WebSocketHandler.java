@@ -150,9 +150,9 @@ public class WebSocketHandler {
         GameDAO gameDAO = daoRecord.gameDAO();
         String role = getRole(username, gameID);
         if (role.equals("white")) {
-            gameDAO.updateGame(gameID, "WHITE", null);
+            gameDAO.updateGame(gameID, "WHITE", null, null);
         } else if (role.equals("black")) {
-            gameDAO.updateGame(gameID, "BLACK", null);
+            gameDAO.updateGame(gameID, "BLACK", null, null);
         }
     }
 }

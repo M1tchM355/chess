@@ -96,26 +96,44 @@ public class SQLGameDAO implements GameDAO {
     }
 
     @Override
-    public void updateGame(int gameID, String playerColor, String username) throws DataAccessException {
-        String statement;
-        if (playerColor.equals("WHITE")) {
-            statement = "UPDATE game SET whiteUsername=? WHERE gameID=?";
-        } else if (playerColor.equals("BLACK")) {
-            statement = "UPDATE game SET blackUsername=? WHERE gameID=?";
-        } else {
-            throw new DataAccessException("Invalid color");
-        }
+    public void updateGame(int gameID, String playerColor, String username, ChessGame game) throws DataAccessException {
+        String statement = getString(playerColor, game);
 
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setString(1,username);
-                ps.setInt(2,gameID);
+                if (game == null) {
+                    ps.setInt(2,gameID);
+                } else {
+                    ps.setString(2, new Gson().toJson(game));
+                    ps.setInt(3, gameID);
+                }
+
 
                 ps.executeUpdate();
             }
         } catch (SQLException e) {
             throw new DataAccessException(String.format("unable to query database: %s, %s", statement, e.getMessage()));
         }
+    }
+
+    private String getString(String playerColor, ChessGame game) throws DataAccessException {
+        String statement;
+        if (playerColor.equals("WHITE")) {
+            if (game != null) {
+                statement = "UPDATE game SET whiteUsername=?, game=? WHERE gameID=?";
+            } else {
+                statement = "UPDATE game SET whiteUsername=? WHERE gameID=?";
+            }
+        } else if (playerColor.equals("BLACK")) {
+            if (game != null) {
+                statement = "UPDATE game SET blackUsername=?, game=? WHERE gameID=?";
+            } else {
+                statement = "UPDATE game SET blackUsername=? WHERE gameID=?";
+            }        } else {
+            throw new DataAccessException("Invalid color");
+        }
+        return statement;
     }
 
     @Override

@@ -34,7 +34,7 @@ public class MemoryGameDAO implements GameDAO{
     }
 
     @Override
-    public void updateGame(int gameID, String playerColor, String username) throws DataAccessException, AlreadyTakenException {
+    public void updateGame(int gameID, String playerColor, String username, ChessGame game) throws DataAccessException, AlreadyTakenException {
         GameData oldGame = games.get(gameID);
         if(oldGame==null){
             throw new DataAccessException("Invalid gameID");

@@ -191,7 +191,7 @@ public class SQLGameDAOTest {
                 ps.executeUpdate();
             }
 
-            new SQLGameDAO().updateGame(1, "BLACK", blackUsername2);
+            new SQLGameDAO().updateGame(1, "BLACK", blackUsername2, null);
 
             try (var ps2 = conn.prepareStatement(statement2, RETURN_GENERATED_KEYS)) {
                 ps2.setInt(1,1);
@@ -232,7 +232,7 @@ public class SQLGameDAOTest {
             }
 
             Assertions.assertThrows(DataAccessException.class,
-                    () -> new SQLGameDAO().updateGame(1, "NoT a CoLOr", blackUsername2));
+                    () -> new SQLGameDAO().updateGame(1, "NoT a CoLOr", blackUsername2, null));
         } catch (Exception e) {
             Assertions.fail();
         }

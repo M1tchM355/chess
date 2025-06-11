@@ -26,7 +26,7 @@ public class JoinGameService extends ChessService{
         }
         GameData game = gameDAO.getGame(req.gameID());
         if ((playerCol.equals("WHITE") && game.whiteUsername() == null) || (playerCol.equals("BLACK") && game.blackUsername() == null)) {
-            gameDAO.updateGame(req.gameID(),playerCol,authData.username());
+            gameDAO.updateGame(req.gameID(),playerCol,authData.username(), null);
         } else {
             throw new AlreadyTakenException("Color already taken");
         }

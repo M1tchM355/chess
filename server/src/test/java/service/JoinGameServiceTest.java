@@ -46,7 +46,7 @@ public class JoinGameServiceTest {
             userDAO.createUser(user);
             String authToken = authDAO.createAuth(user).authToken();
             int gameID = gameDAO.createGame("game1");
-            gameDAO.updateGame(gameID, "WHITE", "other username");
+            gameDAO.updateGame(gameID, "WHITE", "other username", null);
             JoinGameRequest request = new JoinGameRequest("WHITE",gameID,authToken);
             Assertions.assertThrows(AlreadyTakenException.class, () -> joinGameService.joinGame(request));
         } catch (DataAccessException e) {
