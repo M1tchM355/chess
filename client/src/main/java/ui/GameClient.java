@@ -53,7 +53,9 @@ public class GameClient extends Client {
                 """;
     }
 
-    public String leave() {
+    public String leave() throws ResponseException {
+        currentGame = null;
+        ws.leave(authToken, gameID);
         return "Left game";
     }
 
@@ -121,7 +123,6 @@ public class GameClient extends Client {
 
                 res.append(setBorder()).append(" ").append(i).append(" ").append(RESET_BG_COLOR);
             }
-            res.append("\n").append(setBorder());
             res.append("\n").append(setBorder()).append("    h  g  f  e  d  c  b  a    ");
         }
         res.append(RESET_BG_COLOR).append(RESET_TEXT_COLOR);
