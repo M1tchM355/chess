@@ -8,7 +8,10 @@ import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import server.ResponseException;
 import websocket.commands.*;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
@@ -25,7 +28,7 @@ public class WebSocketHandler {
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) {
+    public void onMessage(Session session, String message) throws ResponseException {
         try {
             UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
 
@@ -34,21 +37,24 @@ public class WebSocketHandler {
             connections.add(username, command.getGameID(), session);
 
             switch (command.getCommandType()) {
-                case CONNECT -> connect(session, username, (ConnectCommand) command);
-                case MAKE_MOVE -> makeMove(session, username, (MakeMoveCommand) command);
-                case LEAVE -> leave(session, username, (LeaveCommand) command);
-                case RESIGN -> resign(session, username, (ResignCommand) command);
+                case CONNECT -> connect(session, username, new Gson().fromJson(message, ConnectCommand.class));
+                case MAKE_MOVE -> makeMove(session, username, new Gson().fromJson(message, MakeMoveCommand.class));
+                case LEAVE -> leave(session, username, new Gson().fromJson(message, LeaveCommand.class));
+                case RESIGN -> resign(session, username, new Gson().fromJson(message, ResignCommand.class));
             }
+        } catch (DataAccessException e) {
+            throw new ResponseException(401, "Unauthorized");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new ResponseException(500, e.getMessage());
         }
     }
 
     private void connect(Session session, String username, ConnectCommand cmd) throws IOException, DataAccessException {
-        String game = new Gson().toJson(daoRecord.gameDAO().getGame(cmd.getGameID()).game());
+        LoadGameMessage loadGame = new LoadGameMessage(new Gson().toJson(daoRecord.gameDAO().getGame(cmd.getGameID()).game()));
+        String game = new Gson().toJson(loadGame);
         session.getRemote().sendString(game);
 
-        String message = String.format("%s joined the game as " + cmd.getRole(), username);
+        String message = String.format("%s joined the game as ", username);
         NotificationMessage notification = new NotificationMessage(message);
         connections.broadcast(username, notification);
     }
