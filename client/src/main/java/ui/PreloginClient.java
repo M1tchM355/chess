@@ -64,7 +64,7 @@ public class PreloginClient extends Client {
                 RegisterRequest request = new RegisterRequest(username, password, email);
                 RegisterResult result = this.server.register(request);
                 this.authToken = result.authToken();
-                return "Welcome " + username + "! ";
+                return "Welcome " + username;
             } catch (Exception e) {
                 throw new ResponseException(500, "Couldn't register you. Try logging in");
             }
