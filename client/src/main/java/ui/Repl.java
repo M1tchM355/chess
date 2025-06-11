@@ -44,29 +44,28 @@ public class Repl implements ServerMessageObserver {
                 String[] words = result.split(" ");
                 String firstWord = words[0];
                 authToken = activeClient.getAuthToken();
-                if (firstWord.equals("Welcome")) {
-                    user = words[1];
-                    activeClient = postloginClient;
-                    postloginClient.setAuthToken(authToken);
-                    gameClient.setAuthToken(authToken);
-                } else if (firstWord.equals("Bye!")) {
-                    user = "NOT LOGGED IN";
-                    activeClient = preloginClient;
-                    postloginClient.setAuthToken(null);
-                    gameClient.setAuthToken(null);
-                } else if (firstWord.equals("Observing")) {
-                    activeClient = gameClient;
-                    gameClient.setGameID(postloginClient.getGameID());
-                    gameClient.setRole(postloginClient.getRole());
-                    gameClient.connect();
-                } else if (firstWord.equals("Joined")) {
-                    activeClient = gameClient;
-                    gameClient.setGameID(postloginClient.getGameID());
-                    gameClient.setRole(postloginClient.getRole());
-                    gameClient.connect();
-                } else if (firstWord.equals("Left")) {
-                    activeClient = postloginClient;
+                switch (firstWord) {
+                    case "Welcome" -> {
+                        user = words[1];
+                        activeClient = postloginClient;
+                        postloginClient.setAuthToken(authToken);
+                        gameClient.setAuthToken(authToken);
+                    }
+                    case "Bye!" -> {
+                        user = "NOT LOGGED IN";
+                        activeClient = preloginClient;
+                        postloginClient.setAuthToken(null);
+                        gameClient.setAuthToken(null);
+                    }
+                    case "Observing", "Joined" -> {
+                        activeClient = gameClient;
+                        gameClient.setGameID(postloginClient.getGameID());
+                        gameClient.setRole(postloginClient.getRole());
+                        gameClient.connect();
+                    }
+                    case "Left" -> activeClient = postloginClient;
                 }
+                result = "";
             } catch (Throwable e) {
                 var msg = e.toString();
                 System.out.print(msg);
@@ -79,8 +78,8 @@ public class Repl implements ServerMessageObserver {
     public void notify(ServerMessage message) {
         switch (message.getServerMessageType()) {
             case NOTIFICATION -> displayNotification(((NotificationMessage) message).getMessage());
-            case ERROR -> displayError(((ErrorMessage) message).getMessage());
-            case LOAD_GAME -> loadGame(((LoadGameMessage) message).getMessage());
+            case ERROR -> displayError(((ErrorMessage) message).getErrorMessage());
+            case LOAD_GAME -> loadGame(((LoadGameMessage) message).getGame());
         }
     }
 
