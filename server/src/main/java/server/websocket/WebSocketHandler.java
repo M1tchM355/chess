@@ -66,6 +66,20 @@ public class WebSocketHandler {
             ChessMove move = cmd.getMove();
             int gameID = cmd.getGameID();
 
+            String role = getRole(username, gameID);
+            ChessGame.TeamColor color;
+            if (role.equals("white")) {
+                color = ChessGame.TeamColor.WHITE;
+            } else if (role.equals("black")) {
+                color = ChessGame.TeamColor.BLACK;
+            } else {
+                throw new InvalidMoveException("Observer can't make moves");
+            }
+            var turn = daoRecord.gameDAO().getGame(gameID).game().getTeamTurn();
+            if (!(turn == color)) {
+                throw new InvalidMoveException("Not your turn");
+            }
+
             updateGame(move, gameID);
 
             sendLoadGame(session, cmd, true);
