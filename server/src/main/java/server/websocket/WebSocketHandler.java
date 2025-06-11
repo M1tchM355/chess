@@ -76,7 +76,7 @@ public class WebSocketHandler {
             checkGame(session, gameID);
         } catch (InvalidMoveException e) {
             sendError(session, e.getMessage());
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             sendError(session, "Error updating move");
         }
     }

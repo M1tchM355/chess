@@ -101,14 +101,18 @@ public class SQLGameDAO implements GameDAO {
 
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement)) {
-                ps.setString(1,username);
-                if (game == null) {
-                    ps.setInt(2,gameID);
+                if (playerColor == null) {
+                    ps.setString(1, new Gson().toJson(game));
+                    ps.setInt(2, gameID);
                 } else {
-                    ps.setString(2, new Gson().toJson(game));
-                    ps.setInt(3, gameID);
+                    ps.setString(1, username);
+                    if (game == null) {
+                        ps.setInt(2,gameID);
+                    } else {
+                        ps.setString(2, new Gson().toJson(game));
+                        ps.setInt(3, gameID);
+                    }
                 }
-
 
                 ps.executeUpdate();
             }
@@ -119,6 +123,13 @@ public class SQLGameDAO implements GameDAO {
 
     private String getString(String playerColor, ChessGame game) throws DataAccessException {
         String statement;
+        if (playerColor == null) {
+            if (game != null) {
+                return "UPDATE game SET game=? WHERE gameID=?";
+            } else {
+                throw new DataAccessException("Can't have null player color and game");
+            }
+        }
         if (playerColor.equals("WHITE")) {
             if (game != null) {
                 statement = "UPDATE game SET whiteUsername=?, game=? WHERE gameID=?";
