@@ -85,7 +85,7 @@ public class WebSocketHandler {
         int gameID = cmd.getGameID();
         removePlayer(username, gameID);
 
-        sendNotification(username + "left the game", username);
+        sendNotification(username + " left the game", username);
     }
 
     private void resign(Session session, String username, ResignCommand cmd) {
@@ -156,5 +156,6 @@ public class WebSocketHandler {
         } else if (role.equals("black")) {
             gameDAO.updateGame(gameID, "BLACK", null, null);
         }
+        connections.remove(username);
     }
 }
