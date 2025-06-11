@@ -113,7 +113,9 @@ public class WebSocketHandler {
     }
 
     private void updateGame(ChessMove move, int gameID) throws DataAccessException, InvalidMoveException {
-        daoRecord.gameDAO().getGame(gameID).game().makeMove(move);
+        ChessGame game = daoRecord.gameDAO().getGame(gameID).game();
+        game.makeMove(move);
+        daoRecord.gameDAO().updateGame(gameID,null, null, game);
     }
 
     private void sendLoadGame(Session session, UserGameCommand cmd, boolean toEveryone) throws DataAccessException, IOException {
