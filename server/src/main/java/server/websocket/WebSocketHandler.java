@@ -28,7 +28,7 @@ public class WebSocketHandler {
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws ResponseException {
+    public void onMessage(Session session, String message) throws IOException {
         try {
             UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
 
@@ -42,21 +42,25 @@ public class WebSocketHandler {
                 case LEAVE -> leave(session, username, new Gson().fromJson(message, LeaveCommand.class));
                 case RESIGN -> resign(session, username, new Gson().fromJson(message, ResignCommand.class));
             }
-        } catch (DataAccessException e) {
-            throw new ResponseException(401, "Unauthorized");
         } catch (Exception e) {
-            throw new ResponseException(500, e.getMessage());
+            ErrorMessage err = new ErrorMessage("Error: Unauthorized");
+            session.getRemote().sendString(new Gson().toJson(err));
         }
     }
 
-    private void connect(Session session, String username, ConnectCommand cmd) throws IOException, DataAccessException {
-        LoadGameMessage loadGame = new LoadGameMessage(new Gson().toJson(daoRecord.gameDAO().getGame(cmd.getGameID()).game()));
-        String game = new Gson().toJson(loadGame);
-        session.getRemote().sendString(game);
+    private void connect(Session session, String username, ConnectCommand cmd) throws IOException {
+        try {
+            LoadGameMessage loadGame = new LoadGameMessage(new Gson().toJson(daoRecord.gameDAO().getGame(cmd.getGameID()).game()));
+            String game = new Gson().toJson(loadGame);
+            session.getRemote().sendString(game);
 
-        String message = String.format("%s joined the game as " + getRole(username, cmd.getGameID()), username);
-        NotificationMessage notification = new NotificationMessage(message);
-        connections.broadcastNotification(username, new Gson().toJson(notification));
+            String message = String.format("%s joined the game as " + getRole(username, cmd.getGameID()), username);
+            NotificationMessage notification = new NotificationMessage(message);
+            connections.broadcastNotification(username, new Gson().toJson(notification));
+        } catch (Exception e) {
+            ErrorMessage err = new ErrorMessage("Error");
+            session.getRemote().sendString(new Gson().toJson(err));
+        }
     }
 
     private void makeMove(Session session, String username, MakeMoveCommand cmd) throws IOException {
@@ -73,7 +77,7 @@ public class WebSocketHandler {
 
     }
 
-    private String getUsername(String authToken) throws DataAccessException {
+    private String getUsername(String authToken) throws DataAccessException, NullPointerException {
         return daoRecord.authDAO().getAuth(authToken).username();
     }
 
