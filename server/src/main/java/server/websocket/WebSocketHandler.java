@@ -66,10 +66,6 @@ public class WebSocketHandler {
             ChessMove move = cmd.getMove();
             int gameID = cmd.getGameID();
 
-//            if (!isValidMove(move, gameID)){
-//                sendError(session, "Not a valid move");
-//            }
-
             updateGame(move, gameID);
 
             sendLoadGame(session, cmd, true);
@@ -77,7 +73,7 @@ public class WebSocketHandler {
             String message = String.format("%s made a move: " + cmd.getMove(), username);
             sendNotification(message, username);
 
-            checkGame();
+            checkGame(session, gameID);
         } catch (InvalidMoveException e) {
             sendError(session, e.getMessage());
         } catch (Exception e) {
@@ -113,11 +109,6 @@ public class WebSocketHandler {
         return "an observer";
     }
 
-    private boolean isValidMove(ChessMove move, int gameID) throws DataAccessException {
-        var validMoves = daoRecord.gameDAO().getGame(gameID).game().validMoves(move.getStartPosition());
-        return validMoves.contains(move);
-    }
-
     private void updateGame(ChessMove move, int gameID) throws DataAccessException, InvalidMoveException {
         daoRecord.gameDAO().getGame(gameID).game().makeMove(move);
     }
@@ -132,12 +123,23 @@ public class WebSocketHandler {
         }
     }
 
-    private void sendNotification(String message, String username) throws IOException {
+    private void sendNotification(String message, String excludedUsername) throws IOException {
         NotificationMessage notification = new NotificationMessage(message);
-        connections.broadcastNotification(username, new Gson().toJson(notification));
+        connections.broadcastNotification(excludedUsername, new Gson().toJson(notification));
     }
 
-    private void checkGame() {
-
+    private void checkGame(Session session, int gameID) throws DataAccessException, IOException {
+        ChessGame game = daoRecord.gameDAO().getGame(gameID).game();
+        var turn = game.getTeamTurn();
+        boolean isInCheck = game.isInCheck(turn);
+        boolean isInCheckmate = game.isInCheckmate(turn);
+        boolean isInStalemate = game.isInStalemate(turn);
+        if (isInCheckmate) {
+            sendNotification(turn.name() + "is in checkmate.", null);
+        } else if (isInCheck) {
+            sendNotification(turn.name() + "is in check", null);
+        } else if (isInStalemate) {
+            sendNotification("stalemate", null);
+        }
     }
 }
