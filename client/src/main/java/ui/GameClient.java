@@ -24,7 +24,6 @@ public class GameClient extends Client {
     @Override
     public String eval(String input) {
         try {
-            ws = new WebsocketFacade(serverUrl, observer);
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
@@ -59,6 +58,7 @@ public class GameClient extends Client {
     }
 
     public void connect() throws ResponseException {
+        ws = new WebsocketFacade(serverUrl, observer);
         ws.connect(authToken, gameID, role);
     }
 
@@ -67,9 +67,9 @@ public class GameClient extends Client {
             return "Not in a game";
         }
         if (role.equals("BLACK")) {
-            return printGameBlack();
+            return printGame("black");
         } else {
-            return printGameWhite();
+            return printGame("white");
         }
     }
 
@@ -89,9 +89,23 @@ public class GameClient extends Client {
         return "quit";
     }
 
-    private String printGameWhite() {
-        StringBuilder res = new StringBuilder("\n" + setBorder() + "    a  b  c  d  e  f  g  h    " + RESET_BG_COLOR);
-        for (int i = 8; i >= 1; i--) {
+    private String printGame(String color) {
+        int start;
+        int finish;
+        int add;
+        StringBuilder res = new StringBuilder("\n" + setBorder());
+        if (color.equals("white")) {
+            start = 8;
+            finish = 1;
+            add = -1;
+            res.append("    a  b  c  d  e  f  g  h    " + RESET_BG_COLOR);
+        } else {
+            start = 1;
+            finish = 8;
+            add = 1;
+            res.append("    h  g  f  e  d  c  b  a    " + RESET_BG_COLOR);
+        }
+        for (int i = start; i >= finish; i += add) {
             res.append("\n").append(setBorder()).append(" ").append(i).append(" ").append(setLightBG())
                     .append(getPiece(i, 1)).append(setDarkBG()).append(getPiece(i, 2)).append(setLightBG())
                     .append(getPiece(i, 3)).append(setDarkBG()).append(getPiece(i, 4)).append(setLightBG())
@@ -99,21 +113,13 @@ public class GameClient extends Client {
                     .append(getPiece(i, 7)).append(setDarkBG()).append(getPiece(i, 8)).append(setBorder())
                     .append(" ").append(i).append(" ").append(RESET_BG_COLOR);
         }
-        res.append("\n").append(setBorder()).append("    a  b  c  d  e  f  g  h    ").append(RESET_BG_COLOR).append(RESET_TEXT_COLOR);
-        return res.toString();
-    }
-
-    private String printGameBlack() {
-        StringBuilder res = new StringBuilder("\n" + setBorder() + "    h  g  f  e  d  c  b  a    " + RESET_BG_COLOR);
-        for (int i = 1; i <= 8; i++) {
-            res.append("\n").append(setBorder()).append(" ").append(i).append(" ").append(setLightBG())
-                    .append(getPiece(i, 1)).append(setDarkBG()).append(getPiece(i, 2)).append(setLightBG())
-                    .append(getPiece(i, 3)).append(setDarkBG()).append(getPiece(i, 4)).append(setLightBG())
-                    .append(getPiece(i, 5)).append(setDarkBG()).append(getPiece(i, 6)).append(setLightBG())
-                    .append(getPiece(i, 7)).append(setDarkBG()).append(getPiece(i, 8)).append(setBorder())
-                    .append(" ").append(i).append(" ").append(RESET_BG_COLOR);
+        res.append("\n").append(setBorder());
+        if (color.equals("white")) {
+            res.append("    a  b  c  d  e  f  g  h    ");
+        } else {
+            res.append("\n").append(setBorder()).append("    h  g  f  e  d  c  b  a    ");
         }
-        res.append("\n").append(setBorder()).append("    h  g  f  e  d  c  b  a    ").append(RESET_BG_COLOR).append(RESET_TEXT_COLOR);
+        res.append(RESET_BG_COLOR).append(RESET_TEXT_COLOR);
         return res.toString();
     }
 
