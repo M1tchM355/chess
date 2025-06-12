@@ -50,7 +50,7 @@ public class WebSocketHandler {
             sendLoadGame(session, cmd, false);
 
             String message = String.format("%s joined the game as " + getRole(username, cmd.getGameID()), username);
-            sendNotification(message, username);
+            sendNotification(message, username, cmd.getGameID());
         } catch (Exception e) {
             sendError(session, "Error connecting");
         }
@@ -80,7 +80,7 @@ public class WebSocketHandler {
             sendLoadGame(session, cmd, true);
 
             String message = String.format("%s made a move: " + cmd.getMove(), username);
-            sendNotification(message, username);
+            sendNotification(message, username, gameID);
 
             checkGame(session, gameID);
         } catch (InvalidMoveException e) {
@@ -94,7 +94,7 @@ public class WebSocketHandler {
         int gameID = cmd.getGameID();
         removePlayer(username, gameID);
 
-        sendNotification(username + " left the game", username);
+        sendNotification(username + " left the game", username, gameID);
     }
 
     private void resign(Session session, String username, ResignCommand cmd) throws IOException, DataAccessException {
@@ -107,7 +107,7 @@ public class WebSocketHandler {
             } else {
                 resignGame(username, gameID);
 
-                sendNotification(username + " resigned the game", null);
+                sendNotification(username + " resigned the game", null, gameID);
             }
         } catch (DataAccessException e) {
             sendError(session, "Can't resign");
@@ -143,16 +143,16 @@ public class WebSocketHandler {
     private void sendLoadGame(Session session, UserGameCommand cmd, boolean toEveryone) throws DataAccessException, IOException {
         LoadGameMessage loadGame = new LoadGameMessage(new Gson().toJson(daoRecord.gameDAO().getGame(cmd.getGameID()).game()));
         if (toEveryone) {
-            connections.broadcastNotification(null, new Gson().toJson(loadGame));
+            connections.broadcastNotification(null, new Gson().toJson(loadGame), cmd.getGameID());
         } else {
             String game = new Gson().toJson(loadGame);
             session.getRemote().sendString(game);
         }
     }
 
-    private void sendNotification(String message, String excludedUsername) throws IOException {
+    private void sendNotification(String message, String excludedUsername, int gameID) throws IOException {
         NotificationMessage notification = new NotificationMessage(message);
-        connections.broadcastNotification(excludedUsername, new Gson().toJson(notification));
+        connections.broadcastNotification(excludedUsername, new Gson().toJson(notification), gameID);
     }
 
     private void checkGame(Session session, int gameID) throws DataAccessException, IOException {
@@ -162,11 +162,11 @@ public class WebSocketHandler {
         boolean isInCheckmate = game.isInCheckmate(turn);
         boolean isInStalemate = game.isInStalemate(turn);
         if (isInCheckmate) {
-            sendNotification(turn.name() + "is in checkmate.", null);
+            sendNotification(turn.name() + "is in checkmate.", null, gameID);
         } else if (isInCheck) {
-            sendNotification(turn.name() + "is in check", null);
+            sendNotification(turn.name() + "is in check", null, gameID);
         } else if (isInStalemate) {
-            sendNotification("stalemate", null);
+            sendNotification("stalemate", null, gameID);
         }
     }
 

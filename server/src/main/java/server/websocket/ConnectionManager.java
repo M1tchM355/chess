@@ -21,11 +21,11 @@ public class ConnectionManager {
         connections.remove(visitorName);
     }
 
-    public void broadcastNotification(String excludeVisitorName, String notification) throws IOException {
+    public void broadcastNotification(String excludeVisitorName, String notification, int gameID) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
-                if (!c.username.equals(excludeVisitorName)) {
+                if (!c.username.equals(excludeVisitorName) && c.gameID == gameID) {
                     c.send(notification);
                 }
             } else {
