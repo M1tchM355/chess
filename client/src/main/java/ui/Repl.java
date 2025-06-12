@@ -88,11 +88,13 @@ public class Repl implements ServerMessageObserver {
     }
 
     private void displayNotification(String message) {
-
+        System.out.println(SET_TEXT_COLOR_GREEN + message);
+        printPrompt();
     }
 
     private void displayError(String message) {
-
+        System.out.println(SET_TEXT_COLOR_RED + message);
+        printPrompt();
     }
 
     private void loadGame(String message) {
