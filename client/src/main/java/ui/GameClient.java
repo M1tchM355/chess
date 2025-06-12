@@ -150,37 +150,33 @@ public class GameClient extends Client {
         if (color.equals("white")) {
             res.append("    a  b  c  d  e  f  g  h    ").append(RESET_BG_COLOR);
             for (int i = 8; i >= 1; i--) {
-                res.append("\n").append(setBorder()).append(" ").append(i).append(" ");
-
-                boolean isLight = (i % 2 == 0);
-                for (int j = 1; j <= 8; j++) {
-                    res.append(isLight ? setLightBG() : setDarkBG());
-                    res.append(getPiece(i, j));
-                    isLight = !isLight;
-                }
-
-                res.append(setBorder()).append(" ").append(i).append(" ").append(RESET_BG_COLOR);
+                res = printSquares(res, i);
             }
             res.append("\n").append(setBorder());
             res.append("    a  b  c  d  e  f  g  h    ");
         } else {
             res.append("    h  g  f  e  d  c  b  a    " + RESET_BG_COLOR);
             for (int i = 1; i <= 8; i++) {
-                res.append("\n").append(setBorder()).append(" ").append(i).append(" ");
-
-                boolean isLight = (i % 2 == 0);
-                for (int j = 1; j <= 8; j++) {
-                    res.append(isLight ? setLightBG() : setDarkBG());
-                    res.append(getPiece(i, j));
-                    isLight = !isLight;
-                }
-
-                res.append(setBorder()).append(" ").append(i).append(" ").append(RESET_BG_COLOR);
+                res = printSquares(res, i);
             }
             res.append("\n").append(setBorder()).append("    h  g  f  e  d  c  b  a    ");
         }
         res.append(RESET_BG_COLOR).append(RESET_TEXT_COLOR);
         return res.toString();
+    }
+
+    private StringBuilder printSquares(StringBuilder res, int i) {
+        res.append("\n").append(setBorder()).append(" ").append(i).append(" ");
+
+        boolean isLight = (i % 2 == 0);
+        for (int j = 1; j <= 8; j++) {
+            res.append(isLight ? setLightBG() : setDarkBG());
+            res.append(getPiece(i, j));
+            isLight = !isLight;
+        }
+
+        res.append(setBorder()).append(" ").append(i).append(" ").append(RESET_BG_COLOR);
+        return res;
     }
 
     private String getPiece(int row, int col) {
