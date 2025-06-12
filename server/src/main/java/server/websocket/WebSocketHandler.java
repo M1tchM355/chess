@@ -102,8 +102,11 @@ public class WebSocketHandler {
         sendNotification(username + " left the game", username);
     }
 
-    private void resign(Session session, String username, ResignCommand cmd) {
+    private void resign(Session session, String username, ResignCommand cmd) throws IOException, DataAccessException {
+        int gameID = cmd.getGameID();
+        resignGame(username, gameID);
 
+        sendNotification(username + " resigned the game", null);
     }
 
     private String getUsername(String authToken) throws DataAccessException, NullPointerException {
@@ -171,5 +174,12 @@ public class WebSocketHandler {
             gameDAO.updateGame(gameID, "BLACK", null, null);
         }
         connections.remove(username);
+    }
+
+    private void resignGame(String username, int gameID) throws DataAccessException {
+        ChessGame game = daoRecord.gameDAO().getGame(gameID).game();
+        game.setOver(true);
+
+        daoRecord.gameDAO().updateGame(gameID,null, null, game);
     }
 }

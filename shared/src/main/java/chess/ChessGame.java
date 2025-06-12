@@ -11,12 +11,14 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessGame {
-
-    private TeamColor turn = TeamColor.WHITE;
+    private TeamColor turn;
     private ChessBoard board = new ChessBoard();
+    private boolean isOver;
 
     public ChessGame() {
         board.resetBoard();
+        turn = TeamColor.WHITE;
+        isOver = false;
     }
 
     /**
@@ -50,6 +52,14 @@ public class ChessGame {
     @Override
     public int hashCode() {
         return Objects.hash(turn, board);
+    }
+
+    public boolean isOver() {
+        return isOver;
+    }
+
+    public void setOver(boolean over) {
+        isOver = over;
     }
 
     /**
@@ -103,6 +113,9 @@ public class ChessGame {
         ChessPiece.PieceType promote = move.getPromotionPiece();
         Collection<ChessMove> validMoves = validMoves(start);
         ChessPiece piece = board.getPiece(start);
+        if (isOver) {
+            throw new InvalidMoveException("Game is over");
+        }
         if(validMoves==null){
             throw new InvalidMoveException("No valid moves");
         }
