@@ -5,18 +5,13 @@ import chess.ChessMove;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.*;
-import model.AuthData;
-import model.GameData;
-import org.eclipse.jetty.util.IO;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import server.ResponseException;
 import websocket.commands.*;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
-import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 
@@ -103,10 +98,20 @@ public class WebSocketHandler {
     }
 
     private void resign(Session session, String username, ResignCommand cmd) throws IOException, DataAccessException {
-        int gameID = cmd.getGameID();
-        resignGame(username, gameID);
+        try {
+            int gameID = cmd.getGameID();
+            String role = getRole(username, gameID);
 
-        sendNotification(username + " resigned the game", null);
+            if (role.equals("an observer")) {
+                sendError(session, "An observer can't resign");
+            } else {
+                resignGame(username, gameID);
+
+                sendNotification(username + " resigned the game", null);
+            }
+        } catch (DataAccessException e) {
+            sendError(session, "Can't resign");
+        }
     }
 
     private String getUsername(String authToken) throws DataAccessException, NullPointerException {
@@ -178,6 +183,9 @@ public class WebSocketHandler {
 
     private void resignGame(String username, int gameID) throws DataAccessException {
         ChessGame game = daoRecord.gameDAO().getGame(gameID).game();
+        if (game.isOver()) {
+            throw new DataAccessException("Game is already over");
+        }
         game.setOver(true);
 
         daoRecord.gameDAO().updateGame(gameID,null, null, game);
