@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import request.JoinGameRequest;
@@ -75,19 +76,73 @@ public class GameClient extends Client {
         }
     }
 
-    public String move(String... params) {
-        return null;
+    public String move(String... params) throws ResponseException {
+        if (params.length == 2) {
+            try {
+                String start = params[0].toLowerCase();
+                var splitStart = start.split("");
+                if (splitStart.length != 2) {
+                    throw new IllegalArgumentException("Not a valid start position");
+                }
+
+                ChessMove move = getChessMove(params, splitStart);
+                ws.makeMove(authToken, gameID, move);
+                return "You made a move";
+            } catch (IllegalArgumentException e) {
+                throw new ResponseException(400, e.getMessage());
+            } catch (Exception e) {
+                throw new ResponseException(500, "Couldn't make the move");
+            }
+        }
+        throw new ResponseException(400, "Expected move <START> <END>");
+    }
+
+    private ChessMove getChessMove(String[] params, String[] splitStart) {
+        var startRowString = splitStart[0];
+        var startColString = splitStart[1];
+        int startRow = parseRow(startRowString);
+        int startCol = Integer.parseInt(startColString);
+
+        String finish = params[1].toLowerCase();
+        var splitFinish = finish.split("");
+        if (splitFinish.length != 2) {
+            throw new IllegalArgumentException("Not a valid finish position");
+        }
+        var finishRowString = splitStart[0];
+        var finishColString = splitStart[1];
+        int finishRow = parseRow(finishRowString);
+        int finishCol = Integer.parseInt(finishColString);
+
+        return new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(finishRow, finishCol), null);
+    }
+
+    private int parseRow(String startRowString) throws IllegalArgumentException {
+        int row;
+        switch (startRowString) {
+            case "a" -> row = 1;
+            case "b" -> row = 2;
+            case "c" -> row = 3;
+            case "d" -> row = 4;
+            case "e" -> row = 5;
+            case "f" -> row = 6;
+            case "g" -> row = 7;
+            case "h" -> row = 8;
+            default -> throw new IllegalArgumentException("Not a valid row");
+        }
+        return row;
     }
 
     public String highlight(String... params) {
         return null;
     }
 
-    public String resign() {
-        return null;
+    public String resign() throws ResponseException {
+        ws.resign(authToken, gameID);
+        return "You resigned.";
     }
 
-    public String quit() {
+    public String quit() throws ResponseException {
+        ws.leave(authToken, gameID);
         return "quit";
     }
 
