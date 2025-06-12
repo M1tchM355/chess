@@ -80,7 +80,7 @@ public class GameClient extends Client {
             try {
                 ChessMove move = getChessMove(params);
                 ws.makeMove(authToken, gameID, move);
-                return "You made a move";
+                return "";
             } catch (IllegalArgumentException e) {
                 throw new ResponseException(400, e.getMessage());
             } catch (Exception e) {

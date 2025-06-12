@@ -162,9 +162,9 @@ public class WebSocketHandler {
         boolean isInCheckmate = game.isInCheckmate(turn);
         boolean isInStalemate = game.isInStalemate(turn);
         if (isInCheckmate) {
-            sendNotification(turn.name() + "is in checkmate.", null, gameID);
+            sendNotification(turn.name() + " is in checkmate.", null, gameID);
         } else if (isInCheck) {
-            sendNotification(turn.name() + "is in check", null, gameID);
+            sendNotification(turn.name() + " is in check", null, gameID);
         } else if (isInStalemate) {
             sendNotification("stalemate", null, gameID);
         }
